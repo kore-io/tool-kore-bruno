@@ -1,7 +1,7 @@
 meta {
   name: Confirmar código
   type: http
-  seq: 2
+  seq: 3
 }
 
 post {
@@ -19,6 +19,12 @@ body:json {
     "email": "{{loginEmail}}",
     "code": "{{loginCode}}"
   }
+}
+
+script:post-response {
+  // Guarda a conta criada pelo código: o "Quem está conectado" confere que o Google
+  // entrou na mesma conta (RN07).
+  if (res.status === 200) bru.setVar("codeUserId", res.body.user.id);
 }
 
 assert {
