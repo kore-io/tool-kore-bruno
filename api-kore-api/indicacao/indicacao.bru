@@ -1,0 +1,26 @@
+meta {
+  name: Indicação
+  type: http
+  seq: 2
+  tags: [
+    manual
+  ]
+}
+
+get {
+  url: {{baseUrl}}/v1/referrals/{{referralCode}}
+  body: none
+  auth: none
+}
+
+assert {
+  res.status: eq 200
+  res.body.error: eq {{referralCode}}
+  res.body.referrerName: isString
+}
+
+docs {
+  `GET /v1/referrals/{code}` de um indicador ativo (RN08): nome, tipo (`planner` ou `seller`) e `discountPercent` (`null` com o desconto desligado, RN09).
+
+  Tag `manual`: precisa de um código de indicador de verdade no ambiente, passado com `--env-var referralCode=…`.
+}
