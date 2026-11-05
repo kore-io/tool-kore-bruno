@@ -1,0 +1,9 @@
+docs {
+  # Kore
+
+  Chamadas das APIs do Kore, organizadas por serviço (ADR "Bruno como ferramenta de teste de chamadas de API").
+
+  Ambientes: **Local**, **Homologação** e **Produção**, com a variável `baseUrl` (ADR "Convenção de ambientes e segredos nas collections do Bruno").
+
+  Tudo o que autentica (o e-mail de login, o código, o token do botão do e-mail) é variável **secret**: o valor fica só na sua máquina e nunca vai para o git. O cookie de sessão o Bruno guarda sozinho depois de entrar.
+}
