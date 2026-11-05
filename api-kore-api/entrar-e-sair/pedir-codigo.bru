@@ -1,0 +1,63 @@
+meta {
+  name: Pedir código
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{baseUrl}}/v1/auth/login-challenges
+  body: json
+  auth: none
+}
+
+headers {
+  Origin: {{appOrigin}}
+}
+
+body:json {
+  {
+    "email": "{{loginEmail}}",
+    "origin": "none"
+  }
+}
+
+script:pre-request {
+  bru.setVar("codeRequestedAt", new Date().toISOString());
+}
+
+script:post-response {
+  // Só no Local: lê o código e o token do botão no Mailpit e guarda como variáveis de
+  // execução (não vão para disco), para o "Confirmar código" e o "Confirmar pelo botão".
+  const mailpitUrl = bru.getEnvVar("mailpitUrl");
+  if (mailpitUrl && res.status === 202) {
+    const axios = require("axios");
+    const email = bru.getEnvVar("loginEmail");
+    const since = bru.getVar("codeRequestedAt");
+    for (let attempt = 0; attempt < 20; attempt += 1) {
+      await bru.sleep(500);
+      const search = await axios.get(`${mailpitUrl}/api/v1/search`, {
+        params: { query: `to:"${email}"`, limit: 1 },
+      });
+      const latest = search.data.messages?.[0];
+      if (latest && latest.Created >= since) {
+        const message = await axios.get(`${mailpitUrl}/api/v1/message/${latest.ID}`);
+        const code = /\b(\d{3}) ?(\d{3})\b/.exec(message.data.Text);
+        const token = /\/entrar\/confirmar\?token=([^\s"<>]+)/.exec(message.data.Text);
+        if (code) bru.setVar("loginCode", `${code[1]}${code[2]}`);
+        if (token) bru.setVar("loginToken", decodeURIComponent(token[1]));
+        break;
+      }
+    }
+  }
+}
+
+assert {
+  res.status: eq 202
+  res.body.email: eq {{loginEmail}}
+}
+
+docs {
+  `POST /v1/auth/login-challenges` (RN03 e RN04). A resposta é sempre a mesma, com ou sem conta. Pedir de novo antes de 60 s dá `429 TOO_SOON` com `resendAvailableAt`.
+
+  No **Local**, o script lê o e-mail no Mailpit e já preenche o código e o token do botão para as próximas chamadas. Fora do Local, copie o código do e-mail para a variável secret `loginCode`.
+}

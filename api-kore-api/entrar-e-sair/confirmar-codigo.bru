@@ -1,0 +1,33 @@
+meta {
+  name: Confirmar código
+  type: http
+  seq: 2
+}
+
+post {
+  url: {{baseUrl}}/v1/auth/login-challenges/verify
+  body: json
+  auth: none
+}
+
+headers {
+  Origin: {{appOrigin}}
+}
+
+body:json {
+  {
+    "email": "{{loginEmail}}",
+    "code": "{{loginCode}}"
+  }
+}
+
+assert {
+  res.status: eq 200
+  res.body.user.email: eq {{loginEmail}}
+}
+
+docs {
+  `POST /v1/auth/login-challenges/verify` com o código (RN01, RN02, RN05). Abre a sessão (cookie `kore_session`) e diz o próximo passo em `next` (RN06): `home`, `choose_profile`, `couple_signup`, `planner_signup` ou `invite`.
+
+  Erros: `401 INVALID_CODE` (com `attemptsLeft`), `410 CHALLENGE_EXPIRED`, `410 CHALLENGE_LOCKED` e `403 USER_BLOCKED`.
+}
