@@ -1,0 +1,35 @@
+meta {
+  name: Google — volta (callback)
+  type: http
+  seq: 7
+  tags: [
+    local
+  ]
+}
+
+get {
+  url: {{baseUrl}}/v1/auth/google/callback?code={{googleCode}}&state={{googleState}}
+  body: none
+  auth: none
+}
+
+params:query {
+  code: {{googleCode}}
+  state: {{googleState}}
+}
+
+settings {
+  encodeUrl: true
+  followRedirects: false
+}
+
+assert {
+  res.status: eq 302
+  res.headers.location: contains /entrar/google?step=
+}
+
+docs {
+  `GET /v1/auth/google/callback` (decisão 147): abre a sessão e manda para `APP_URL/entrar/google?step=&next=`. No erro, para `APP_URL/entrar?error=google_unverified|blocked|google_failed`.
+
+  Pelo Bruno, só no Local (com o `code` do provedor de desenvolvimento). Com o Google de verdade, o callback acontece no navegador.
+}

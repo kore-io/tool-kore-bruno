@@ -1,0 +1,40 @@
+meta {
+  name: Google — provedor de desenvolvimento
+  type: http
+  seq: 6
+  tags: [
+    local
+  ]
+}
+
+get {
+  url: {{baseUrl}}/v1/auth/google/dev?state={{googleState}}&email={{loginEmail}}
+  body: none
+  auth: none
+}
+
+params:query {
+  state: {{googleState}}
+  email: {{loginEmail}}
+}
+
+script:post-response {
+  // O provedor dev volta ao callback como o Google voltaria: guarda o code.
+  const code = /[?&]code=([^&]+)/.exec(res.getHeader("location") ?? "");
+  if (code) bru.setVar("googleCode", decodeURIComponent(code[1]));
+}
+
+settings {
+  encodeUrl: true
+  followRedirects: false
+}
+
+assert {
+  res.status: eq 302
+}
+
+docs {
+  Só no Local, com `GOOGLE_PROVIDER=dev`: o provedor de desenvolvimento da API faz o papel do Google com o e-mail informado. Não é rota do produto (fica fora do OpenAPI).
+
+  Tag `local`: fica fora do `bru run` em homologação e produção.
+}
