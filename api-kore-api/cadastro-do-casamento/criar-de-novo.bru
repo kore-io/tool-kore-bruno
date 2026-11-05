@@ -1,0 +1,37 @@
+meta {
+  name: Criar de novo (já é dono)
+  type: http
+  seq: 7
+}
+
+post {
+  url: {{baseUrl}}/v1/weddings
+  body: json
+  auth: none
+}
+
+headers {
+  Origin: {{appOrigin}}
+}
+
+body:json {
+  {
+    "myName": "Ana Beatriz Moreira",
+    "myTitle": "bride",
+    "partnerName": "Marcos Vinícius Rocha",
+    "city": "Cuiabá",
+    "state": "MT",
+    "slug": "{{weddingSlug}}-outro",
+    "termsVersion": "2026-09"
+  }
+}
+
+assert {
+  res.status: eq 409
+  res.body.error: eq ALREADY_OWNER
+  res.body.weddingId: eq {{weddingId}}
+}
+
+docs {
+  RN06: quem já é dono de um casamento ativo não cria outro. A resposta traz o `weddingId` do casamento que a pessoa já tem.
+}

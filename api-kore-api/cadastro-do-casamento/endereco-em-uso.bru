@@ -1,0 +1,27 @@
+meta {
+  name: Endereço em uso
+  type: http
+  seq: 6
+}
+
+get {
+  url: {{baseUrl}}/v1/weddings/slug-availability?slug={{weddingSlug}}&eventDate=2027-05-15
+  body: none
+  auth: none
+}
+
+params:query {
+  slug: {{weddingSlug}}
+  eventDate: 2027-05-15
+}
+
+assert {
+  res.status: eq 200
+  res.body.available: eq false
+  res.body.reason: eq taken
+  res.body.suggestion: eq {{weddingSlug}}-2027
+}
+
+docs {
+  RN05: o endereço do casamento recém-criado já está em uso. A sugestão leva o ano da data (`{slug}-{ano}`).
+}
