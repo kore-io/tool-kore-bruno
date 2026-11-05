@@ -1,0 +1,30 @@
+meta {
+  name: Convite com e-mail inválido
+  type: http
+  seq: 3
+}
+
+post {
+  url: {{baseUrl}}/v1/weddings/{{weddingId}}/access-invitations
+  body: json
+  auth: none
+}
+
+headers {
+  Origin: {{appOrigin}}
+}
+
+body:json {
+  {
+    "kind": "partner",
+    "emails": ["marcos@"]
+  }
+}
+
+assert {
+  res.status: eq 400
+}
+
+docs {
+  E-mail inválido: `400`, no formato de validação do NestJS, sem código (decisão 99). No app, vira "Informe um e-mail válido." (decisão 155).
+}

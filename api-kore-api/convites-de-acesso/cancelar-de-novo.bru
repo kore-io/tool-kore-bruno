@@ -1,0 +1,24 @@
+meta {
+  name: Cancelar de novo
+  type: http
+  seq: 6
+}
+
+delete {
+  url: {{baseUrl}}/v1/weddings/{{weddingId}}/access-invitations/{{invitationId}}
+  body: none
+  auth: none
+}
+
+headers {
+  Origin: {{appOrigin}}
+}
+
+assert {
+  res.status: eq 409
+  res.body.error: eq NOT_PENDING
+}
+
+docs {
+  RN05: só o convite **pendente** se cancela. O já cancelado, aceito, recusado ou vencido dá `409 NOT_PENDING`.
+}
