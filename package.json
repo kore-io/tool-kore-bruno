@@ -1,0 +1,28 @@
+{
+  "name": "tool-kore-bruno",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "validate": "node scripts/validate-collection.mjs",
+    "test": "node --test \"scripts/**/*.test.mjs\"",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "prepare": "husky"
+  },
+  "lint-staged": {
+    "*.bru": "node scripts/validate-collection.mjs",
+    "*.{json,md,yml,mjs,js}": "prettier --write"
+  },
+  "engines": {
+    "node": ">=24"
+  },
+  "packageManager": "pnpm@10.34.7",
+  "devDependencies": {
+    "@commitlint/cli": "^21.2.4",
+    "@commitlint/config-conventional": "^21.2.4",
+    "@usebruno/lang": "0.41.0",
+    "husky": "^9.1.7",
+    "lint-staged": "^17.6.0",
+    "prettier": "^3.9.10"
+  }
+}
