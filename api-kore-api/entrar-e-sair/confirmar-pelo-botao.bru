@@ -1,0 +1,34 @@
+meta {
+  name: Confirmar pelo botão do e-mail
+  type: http
+  seq: 3
+  tags: [
+    manual
+  ]
+}
+
+post {
+  url: {{baseUrl}}/v1/auth/login-challenges/verify
+  body: json
+  auth: none
+}
+
+headers {
+  Origin: {{appOrigin}}
+}
+
+body:json {
+  {
+    "token": "{{loginToken}}"
+  }
+}
+
+assert {
+  res.status: eq 200
+}
+
+docs {
+  O mesmo verify, pelo botão do e-mail (`/entrar/confirmar?token=`, decisão 139). Use **em vez** do "Confirmar código": o código e o botão valem uma vez só, e um vale pelo outro.
+
+  Tag `manual`: fica fora do `bru run` de ponta a ponta (`--exclude-tags=manual`).
+}

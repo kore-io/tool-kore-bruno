@@ -1,0 +1,23 @@
+meta {
+  name: Sair de todos os aparelhos
+  type: http
+  seq: 2
+}
+
+post {
+  url: {{baseUrl}}/v1/auth/logout-all
+  body: none
+  auth: none
+}
+
+headers {
+  Origin: {{appOrigin}}
+}
+
+assert {
+  res.status: eq 204
+}
+
+docs {
+  `POST /v1/auth/logout-all`: encerra as sessões da pessoa em todos os aparelhos.
+}

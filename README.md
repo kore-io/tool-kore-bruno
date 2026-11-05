@@ -20,6 +20,22 @@ O `appOrigin` vai no cabeçalho `Origin` das escritas: a API recusa escrita com 
 uma origem permitida (`403 ORIGIN_NOT_ALLOWED`). No Local, o `mailpitUrl` aponta para o
 Mailpit do compose da API, onde chegam os e-mails de código.
 
+## Rodar pelo terminal
+
+Com o [CLI do Bruno](https://docs.usebruno.com/bru-cli/overview) (`@usebruno/cli` 4.x), na
+raiz do repositório:
+
+```sh
+# Local: API, worker e Mailpit do api-kore-api de pé; o código vem do Mailpit sozinho.
+bru run --env Local --env-var loginEmail=voce@kore.local --exclude-tags=manual
+
+# Homologação e produção: sem as chamadas que só existem no Local; o código vai por variável.
+bru run --env "Homologação" --env-var loginEmail=… --env-var loginCode=… --exclude-tags=manual,local
+```
+
+Tags: `manual` (o botão do e-mail, que vale no lugar do código) e `local` (o provedor de
+desenvolvimento do Google).
+
 ## Segredos
 
 Nada que autentica vai para o git (ADR "Convenção de ambientes e segredos nas collections

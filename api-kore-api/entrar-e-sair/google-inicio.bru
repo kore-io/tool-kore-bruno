@@ -1,0 +1,37 @@
+meta {
+  name: Google — início
+  type: http
+  seq: 5
+}
+
+get {
+  url: {{baseUrl}}/v1/auth/google?origin=none
+  body: none
+  auth: none
+}
+
+params:query {
+  origin: none
+}
+
+script:post-response {
+  // Guarda o state do Location para o provedor de desenvolvimento e o callback.
+  // O sandbox do Bruno não tem URL: lê o parâmetro com expressão regular.
+  const state = /[?&]state=([^&]+)/.exec(res.getHeader("location") ?? "");
+  if (state) bru.setVar("googleState", decodeURIComponent(state[1]));
+}
+
+settings {
+  encodeUrl: true
+  followRedirects: false
+}
+
+assert {
+  res.status: eq 302
+}
+
+docs {
+  `GET /v1/auth/google` (RN07, decisão 147): grava o cookie `kore_oauth` (state e PKCE) e manda para o Google, ou para o provedor de desenvolvimento no Local (`GOOGLE_PROVIDER=dev`).
+
+  Fora do Local, o resto do fluxo é no navegador: abra o `Location` da resposta.
+}

@@ -1,0 +1,20 @@
+meta {
+  name: Saúde da API
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{baseUrl}}/health
+  body: none
+  auth: none
+}
+
+assert {
+  res.status: eq 200
+  res.body.status: eq ok
+}
+
+docs {
+  `GET /health`: banco e Redis de pé. Fora do `/v1` (decisão 97).
+}

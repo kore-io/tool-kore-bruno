@@ -1,0 +1,23 @@
+meta {
+  name: Sair
+  type: http
+  seq: 4
+}
+
+post {
+  url: {{baseUrl}}/v1/auth/logout
+  body: none
+  auth: none
+}
+
+headers {
+  Origin: {{appOrigin}}
+}
+
+assert {
+  res.status: eq 204
+}
+
+docs {
+  `POST /v1/auth/logout` (RN09): encerra a sessão deste aparelho.
+}
