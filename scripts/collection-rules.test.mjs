@@ -44,6 +44,10 @@ describe('requisições (segredos)', () => {
     );
   });
 
+  it('aceita a UF no campo state do corpo (o state do OAuth só vai na query)', () => {
+    assert.deepEqual(checkFile(request(post('{ "state": "MT", "slug": "ana-e-marcos" }'))), []);
+  });
+
   it('recusa código e e-mail literais no corpo', () => {
     assert.deepEqual(checkFile(request(post('{ "email": "ana@exemplo.com", "code": "123456" }'))), [
       'campo "email" do corpo com valor literal (use uma variável secret)',

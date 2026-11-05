@@ -10,14 +10,21 @@ const SENSITIVE_NAME = /(email|code|token|cookie|session|password|secret|key)/i;
 const SENSITIVE_HEADERS = new Set(['cookie', 'authorization']);
 
 /** Campos de corpo e de query que carregam credencial: só com {{variável}}. */
-const SENSITIVE_FIELDS = new Set(['email', 'code', 'token', 'state']);
+const SENSITIVE_FIELDS = new Set(['email', 'code', 'token']);
+
+/**
+ * Só na query: o `state` do OAuth (callback do Google). No corpo, `state` é a UF do
+ * casamento (POST /v1/weddings), e não autentica.
+ */
+const SENSITIVE_QUERY_FIELDS = new Set([...SENSITIVE_FIELDS, 'state']);
 
 const TEMPLATE_ONLY = /^\{\{[\w.-]+\}\}$/;
 
 /** Expressão sobre a resposta, em vars:post-response (ex.: res.body.token). */
 const RESPONSE_EXPRESSION = /^res(\.|\()/;
 
-const isSensitiveField = (name) => SENSITIVE_FIELDS.has(name) || SENSITIVE_NAME.test(name);
+const isSensitiveQueryField = (name) =>
+  SENSITIVE_QUERY_FIELDS.has(name) || SENSITIVE_NAME.test(name);
 
 /** Pares chave=valor da query escrita na própria URL. */
 function urlQuery({ url }) {
@@ -68,7 +75,7 @@ function requestProblems({ json, text }) {
   const reported = new Set();
   for (const param of params) {
     if (
-      isSensitiveField(param.name) &&
+      isSensitiveQueryField(param.name) &&
       !TEMPLATE_ONLY.test(param.value) &&
       !reported.has(param.name)
     ) {
