@@ -1,0 +1,20 @@
+meta {
+  name: Quem está conectado
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{baseUrl}}/v1/me
+  body: none
+  auth: none
+}
+
+assert {
+  res.status: eq 200
+  res.body.user.email: eq {{loginEmail}}
+}
+
+docs {
+  `GET /v1/me`: a pessoa conectada, o perfil ativo e a hora do login. A leitura também renova a sessão (RN08). Sem sessão, `401 SESSION_EXPIRED`.
+}
