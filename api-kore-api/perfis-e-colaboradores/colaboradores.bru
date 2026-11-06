@@ -1,0 +1,37 @@
+meta {
+  name: Colaboradores
+  type: http
+  seq: 5
+}
+
+get {
+  url: {{baseUrl}}/v1/weddings/{{weddingId}}/memberships
+  body: none
+  auth: none
+}
+
+script:post-response {
+  if (res.status === 200) bru.setVar("ownerMembershipId", res.body.members[0].id);
+}
+
+assert {
+  res.status: eq 200
+  res.body.members.length: eq 1
+  res.body.members[0].role: eq owner
+  res.body.members[0].name: eq Ana Beatriz Moreira
+  res.body.members[0].kind: isUndefined
+}
+
+tests {
+  test("os convites pendentes incluem o do aceite (decisão 177(8))", () => {
+    const acceptEmail = bru.getVar("acceptEmail");
+    // Só no Local o convite do aceite é criado (tag local).
+    if (!acceptEmail) return;
+    const emails = res.body.pendingInvitations.map((invitation) => invitation.email);
+    expect(emails).to.include(acceptEmail);
+  });
+}
+
+docs {
+  `GET /v1/weddings/{weddingId}/memberships` (decisão 177(8)): quem tem acesso, donos primeiro (`kind` só no colaborador), e os convites pendentes, vencidos e o link sem e-mail inclusive. Guarda o vínculo da dona para as chamadas seguintes.
+}

@@ -1,0 +1,26 @@
+meta {
+  name: Recusar
+  type: http
+  seq: 5
+  tags: [
+    local
+  ]
+}
+
+post {
+  url: {{baseUrl}}/v1/access-invitations/{{declineToken}}/decline
+  body: none
+  auth: none
+}
+
+headers {
+  Origin: {{appOrigin}}
+}
+
+assert {
+  res.status: eq 204
+}
+
+docs {
+  `POST /v1/access-invitations/{token}/decline` (RN11): encerra o convite e avisa quem convidou. Não exige sessão: o link é a credencial (decisão 136). O link sem e-mail não tem recusa (`409 INVITATION_NOT_DECLINABLE`).
+}

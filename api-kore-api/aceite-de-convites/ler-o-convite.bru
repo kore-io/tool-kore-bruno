@@ -1,0 +1,29 @@
+meta {
+  name: Ler o convite
+  type: http
+  seq: 2
+  tags: [
+    local
+  ]
+}
+
+get {
+  url: {{baseUrl}}/v1/access-invitations/{{inviteToken}}
+  body: none
+  auth: none
+}
+
+assert {
+  res.status: eq 200
+  res.body.kind: eq partner
+  res.body.email: eq {{acceptEmail}}
+  res.body.invitedBy.role: eq owner
+  res.body.wedding.city: eq Cuiabá
+  res.body.wedding.partnerTitleNeeded: eq true
+  res.body.sessionEmailMismatch: eq true
+  res.body.needsName: eq false
+}
+
+docs {
+  `GET /v1/access-invitations/{token}` (RN06): o casamento e quem convidou, antes do aceite. Público; com sessão, diz se o e-mail difere (RN07): aqui a sessão é a da dona, então `sessionEmailMismatch: true`. No convite do parceiro, `partnerTitleNeeded` diz se a tela pergunta "Você é o noivo ou a noiva?" (o cadastro só grava o título de quem cadastrou; decisões 172(2) e 173).
+}

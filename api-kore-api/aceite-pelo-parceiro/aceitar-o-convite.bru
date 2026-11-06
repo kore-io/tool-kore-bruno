@@ -1,0 +1,35 @@
+meta {
+  name: Aceitar o convite
+  type: http
+  seq: 3
+  tags: [
+    local
+  ]
+}
+
+post {
+  url: {{baseUrl}}/v1/access-invitations/{{inviteToken}}/accept
+  body: json
+  auth: none
+}
+
+headers {
+  Origin: {{appOrigin}}
+}
+
+body:json {
+  {
+    "confirmOtherAccount": false,
+    "myTitle": "groom"
+  }
+}
+
+assert {
+  res.status: eq 200
+  res.body.weddingId: eq {{weddingId}}
+  res.body.role: eq owner
+}
+
+docs {
+  `POST /v1/access-invitations/{token}/accept` (RN08): o parceiro vira dono. Com o título do noivo livre nulo, o aceite leva `myTitle` (172(2)). Erros: `409 EMAIL_MISMATCH` (sem `confirmOtherAccount`), `ALREADY_OWNER` (dono de outro casamento), `ALREADY_MEMBER`, `OWNERS_FULL`, `PLANNER_ALREADY`, `SELLER_CANNOT_BE_PLANNER` e `410 INVITATION_INVALID`.
+}

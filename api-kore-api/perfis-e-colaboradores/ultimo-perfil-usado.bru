@@ -1,0 +1,20 @@
+meta {
+  name: Último perfil usado no aparelho
+  type: http
+  seq: 4
+}
+
+get {
+  url: {{baseUrl}}/v1/me
+  body: none
+  auth: none
+}
+
+assert {
+  res.status: eq 200
+  res.body.lastProfileOnDevice: eq couple
+}
+
+docs {
+  RN14 e decisão 177(1): a escolha grava o cookie `kore_last_profile` do aparelho, e o `/me` devolve o último perfil usado nele (o destaque da Seleção de perfil).
+}

@@ -1,0 +1,25 @@
+meta {
+  name: O parceiro no perfil de casal
+  type: http
+  seq: 4
+  tags: [
+    local
+  ]
+}
+
+get {
+  url: {{baseUrl}}/v1/me
+  body: none
+  auth: none
+}
+
+assert {
+  res.status: eq 200
+  res.body.activeProfile: eq couple
+  res.body.memberships[0].weddingId: eq {{weddingId}}
+  res.body.memberships[0].role: eq owner
+}
+
+docs {
+  Decisão 178: o aceite de dono já passa a sessão ao perfil de casal, para o app ir direto ao Dashboard.
+}

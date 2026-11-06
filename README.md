@@ -41,8 +41,11 @@ do código segue até o fim).
 
 A ordem da rodada: Saúde → Entrar e sair → Indicação → Cadastro do casamento (cria o
 casamento de `loginEmail`) → Convites de acesso (convida, reenvia e cancela o convite do
-parceiro desse casamento) → Conta. O endereço do site e o e-mail do parceiro são gerados a
-cada rodada.
+parceiro) → Aceite de convites (lê, tenta aceitar sendo dona e recusa) → Perfis e
+colaboradores (o /me completo, o perfil ativo e quem tem acesso) → Conta → Aceite pelo
+parceiro (entra com o e-mail convidado, aceita, vira dono e sai). O endereço do site e os
+e-mails do parceiro são gerados a cada rodada. Os tokens dos convites e o código do
+parceiro vêm do Mailpit, então essas chamadas têm a tag `local`.
 
 ## Segredos
 

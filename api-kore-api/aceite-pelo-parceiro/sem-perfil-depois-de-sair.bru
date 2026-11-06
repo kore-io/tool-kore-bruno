@@ -1,0 +1,25 @@
+meta {
+  name: Sem perfil depois de sair
+  type: http
+  seq: 8
+  tags: [
+    local
+  ]
+}
+
+get {
+  url: {{baseUrl}}/v1/me
+  body: none
+  auth: none
+}
+
+assert {
+  res.status: eq 200
+  res.body.profiles.length: eq 0
+  res.body.memberships.length: eq 0
+  res.body.activeProfile: isNull
+}
+
+docs {
+  Decisão 179(2): o perfil da sessão que a conta perdeu volta como `activeProfile: null` (a sessão no banco não muda), e o app leva à Seleção de perfil.
+}

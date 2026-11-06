@@ -1,0 +1,25 @@
+meta {
+  name: Ler o convite recusado
+  type: http
+  seq: 6
+  tags: [
+    local
+  ]
+}
+
+get {
+  url: {{baseUrl}}/v1/access-invitations/{{declineToken}}
+  body: none
+  auth: none
+}
+
+assert {
+  res.status: eq 410
+  res.body.error: eq INVITATION_INVALID
+  res.body.reason: eq used
+  res.body.wedding: isUndefined
+}
+
+docs {
+  RN12: o convite que não vale mais abre o Convite inválido, sem dados do casamento. O recusado aparece como `used` (decisão 172(6)).
+}

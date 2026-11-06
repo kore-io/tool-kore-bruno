@@ -1,0 +1,60 @@
+meta {
+  name: Entrar como o parceiro
+  type: http
+  seq: 1
+  tags: [
+    local
+  ]
+}
+
+post {
+  url: {{baseUrl}}/v1/auth/login-challenges
+  body: json
+  auth: none
+}
+
+headers {
+  Origin: {{appOrigin}}
+}
+
+body:json {
+  {
+    "email": "{{acceptEmail}}",
+    "origin": "invite"
+  }
+}
+
+script:pre-request {
+  bru.setVar("partnerCodeRequestedAt", new Date().toISOString());
+}
+
+script:post-response {
+  // O código do e-mail que chegou depois do pedido (a caixa já tem o do convite).
+  const mailpitUrl = bru.getEnvVar("mailpitUrl");
+  if (mailpitUrl && res.status === 202) {
+    const axios = require("axios");
+    const to = bru.getVar("acceptEmail");
+    const since = bru.getVar("partnerCodeRequestedAt");
+    for (let attempt = 0; attempt < 20; attempt += 1) {
+      await bru.sleep(500);
+      const search = await axios.get(`${mailpitUrl}/api/v1/search`, {
+        params: { query: `to:"${to}"`, limit: 1 },
+      });
+      const latest = search.data.messages?.[0];
+      if (latest && latest.Created >= since) {
+        const message = await axios.get(`${mailpitUrl}/api/v1/message/${latest.ID}`);
+        const code = /\b(\d{3}) ?(\d{3})\b/.exec(message.data.Text);
+        if (code) bru.setVar("partnerLoginCode", `${code[1]}${code[2]}`);
+        break;
+      }
+    }
+  }
+}
+
+assert {
+  res.status: eq 202
+}
+
+docs {
+  O parceiro pede o código com a origem `invite` (RN06 do Login; decisão 142: o token do convite não vai ao banco). O script lê o código no Mailpit.
+}

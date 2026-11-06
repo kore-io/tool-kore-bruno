@@ -1,0 +1,61 @@
+meta {
+  name: Convidar para o aceite
+  type: http
+  seq: 1
+  tags: [
+    local
+  ]
+}
+
+post {
+  url: {{baseUrl}}/v1/weddings/{{weddingId}}/access-invitations
+  body: json
+  auth: none
+}
+
+headers {
+  Origin: {{appOrigin}}
+}
+
+body:json {
+  {
+    "kind": "partner",
+    "emails": ["{{acceptEmail}}"]
+  }
+}
+
+script:pre-request {
+  bru.setVar("acceptEmail", `aceite-${Date.now().toString(36)}@kore.local`);
+}
+
+script:post-response {
+  // Só no Local: o token do link vem do e-mail do convite, no Mailpit (o banco guarda só
+  // o hash). Fica em variável de execução, nunca em disco.
+  const mailpitUrl = bru.getEnvVar("mailpitUrl");
+  if (mailpitUrl && res.status === 201) {
+    const axios = require("axios");
+    const to = bru.getVar("acceptEmail");
+    for (let attempt = 0; attempt < 20; attempt += 1) {
+      await bru.sleep(500);
+      const search = await axios.get(`${mailpitUrl}/api/v1/search`, {
+        params: { query: `to:"${to}"`, limit: 1 },
+      });
+      const latest = search.data.messages?.[0];
+      if (latest) {
+        const message = await axios.get(`${mailpitUrl}/api/v1/message/${latest.ID}`);
+        const token = /\/convite\/([^\s"<>]+)/.exec(message.data.Text);
+        if (token) bru.setVar("inviteToken", decodeURIComponent(token[1]));
+        break;
+      }
+    }
+  }
+}
+
+assert {
+  res.status: eq 201
+  res.body.invitations[0].email: eq {{acceptEmail}}
+}
+
+docs {
+  Um convite do parceiro novo, para o aceite das próximas chamadas e da pasta "Aceite pelo parceiro". O script lê o token do link no Mailpit.
+}

@@ -1,0 +1,40 @@
+meta {
+  name: Os dois donos
+  type: http
+  seq: 5
+  tags: [
+    local
+  ]
+}
+
+get {
+  url: {{baseUrl}}/v1/weddings/{{weddingId}}/memberships
+  body: none
+  auth: none
+}
+
+script:post-response {
+  if (res.status === 200) {
+    const owner = bru.getVar("ownerMembershipId");
+    const mine = res.body.members.find((member) => member.id !== owner);
+    if (mine) bru.setVar("partnerMembershipId", mine.id);
+  }
+}
+
+assert {
+  res.status: eq 200
+  res.body.members.length: eq 2
+  res.body.members[0].role: eq owner
+  res.body.members[1].role: eq owner
+}
+
+tests {
+  test("o convite aceito sai dos pendentes", () => {
+    const emails = res.body.pendingInvitations.map((invitation) => invitation.email);
+    expect(emails).to.not.include(bru.getVar("acceptEmail"));
+  });
+}
+
+docs {
+  Depois do aceite, o casamento tem dois donos, e o convite aceito deixa de estar pendente.
+}

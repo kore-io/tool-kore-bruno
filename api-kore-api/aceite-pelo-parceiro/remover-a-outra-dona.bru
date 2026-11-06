@@ -1,0 +1,27 @@
+meta {
+  name: Remover a outra dona
+  type: http
+  seq: 6
+  tags: [
+    local
+  ]
+}
+
+delete {
+  url: {{baseUrl}}/v1/weddings/{{weddingId}}/memberships/{{ownerMembershipId}}
+  body: none
+  auth: none
+}
+
+headers {
+  Origin: {{appOrigin}}
+}
+
+assert {
+  res.status: eq 409
+  res.body.error: eq CANNOT_REMOVE_OWNER
+}
+
+docs {
+  RN07: um dono não remove o outro (`409 CANNOT_REMOVE_OWNER`); cada um só pode sair.
+}
