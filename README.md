@@ -27,14 +27,21 @@ raiz do repositório:
 
 ```sh
 # Local: API, worker e Mailpit do api-kore-api de pé; o código vem do Mailpit sozinho.
-bru run --env Local --env-var loginEmail=voce@kore.local --exclude-tags=manual
+# Um e-mail novo por rodada: cada pessoa é dona de um casamento só (RN06 do Cadastro).
+bru run --env Local --env-var loginEmail=voce+$(date +%s)@kore.local --exclude-tags=manual
 
 # Homologação e produção: sem as chamadas que só existem no Local; o código vai por variável.
 bru run --env "Homologação" --env-var loginEmail=… --env-var loginCode=… --exclude-tags=manual,local
 ```
 
-Tags: `manual` (o botão do e-mail, que vale no lugar do código) e `local` (o provedor de
+Tags: `manual` (o botão do e-mail, que vale no lugar do código, e a indicação de um
+indicador de verdade, com `--env-var referralCode=…`) e `local` (o provedor de
 desenvolvimento do Google).
+
+A ordem da rodada: Saúde → Entrar e sair → Indicação → Cadastro do casamento (cria o
+casamento de `loginEmail`) → Convites de acesso (convida, reenvia e cancela o convite do
+parceiro desse casamento) → Conta. O endereço do site e o e-mail do parceiro são gerados a
+cada rodada.
 
 ## Segredos
 

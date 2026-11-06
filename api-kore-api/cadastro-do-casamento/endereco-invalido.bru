@@ -1,0 +1,26 @@
+meta {
+  name: Endereço com formato inválido
+  type: http
+  seq: 2
+}
+
+get {
+  url: {{baseUrl}}/v1/weddings/slug-availability?slug=-ab
+  body: none
+  auth: none
+}
+
+params:query {
+  slug: -ab
+}
+
+assert {
+  res.status: eq 200
+  res.body.available: eq false
+  res.body.reason: eq invalid_format
+  res.body.suggestion: isNull
+}
+
+docs {
+  RN04: hífen no início e menos de 3 caracteres não valem. O formato inválido não tem sugestão.
+}

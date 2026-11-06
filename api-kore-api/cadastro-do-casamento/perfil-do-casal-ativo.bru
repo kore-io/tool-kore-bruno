@@ -1,0 +1,20 @@
+meta {
+  name: Perfil do casal ativo
+  type: http
+  seq: 5
+}
+
+get {
+  url: {{baseUrl}}/v1/me
+  body: none
+  auth: none
+}
+
+assert {
+  res.status: eq 200
+  res.body.activeProfile: eq couple
+}
+
+docs {
+  Depois de criar, a sessão já está no perfil de casal (RN10, decisão 171), para o "Fazer isso depois" ir direto ao Dashboard. Que a pessoa é **dona** (RN07) o "Criar de novo" confere: o `409 ALREADY_OWNER` traz o mesmo `weddingId`.
+}

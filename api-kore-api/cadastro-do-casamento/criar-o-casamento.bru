@@ -1,0 +1,49 @@
+meta {
+  name: Criar o casamento
+  type: http
+  seq: 4
+}
+
+post {
+  url: {{baseUrl}}/v1/weddings
+  body: json
+  auth: none
+}
+
+headers {
+  Origin: {{appOrigin}}
+}
+
+body:json {
+  {
+    "myName": "Ana Beatriz Moreira",
+    "myTitle": "bride",
+    "partnerName": "Marcos Vinícius Rocha",
+    "eventDate": "2027-05-15",
+    "city": "Cuiabá",
+    "state": "MT",
+    "slug": "{{weddingSlug}}",
+    "termsVersion": "2026-09",
+    "signupSource": "direct",
+    "utmSource": "bruno"
+  }
+}
+
+script:post-response {
+  if (res.status === 201) bru.setVar("weddingId", res.body.weddingId);
+}
+
+assert {
+  res.status: eq 201
+  res.body.weddingId: isString
+  res.body.slug: eq {{weddingSlug}}
+  res.body.status: eq draft
+  res.body.timezone: eq America/Cuiaba
+  res.body.referrer: isNull
+}
+
+docs {
+  `POST /v1/weddings` (RN02, RN03, RN07, RN11): o casamento nasce em **rascunho**, e o fuso vem da UF (MT → `America/Cuiaba`). Sem indicação, `referrer` é `null`. A origem (`signupSource` e as UTM) é opcional (decisão 135).
+
+  Erros: `409 SLUG_UNAVAILABLE` (com `suggestion`), `409 ALREADY_OWNER` (com `weddingId`), `409 TERMS_VERSION_OUTDATED` e `400` de validação.
+}

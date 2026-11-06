@@ -1,0 +1,36 @@
+meta {
+  name: Criar com os termos desatualizados
+  type: http
+  seq: 3
+}
+
+post {
+  url: {{baseUrl}}/v1/weddings
+  body: json
+  auth: none
+}
+
+headers {
+  Origin: {{appOrigin}}
+}
+
+body:json {
+  {
+    "myName": "Ana Beatriz Moreira",
+    "myTitle": "bride",
+    "partnerName": "Marcos Vinícius Rocha",
+    "city": "Cuiabá",
+    "state": "MT",
+    "slug": "{{weddingSlug}}",
+    "termsVersion": "2000-01"
+  }
+}
+
+assert {
+  res.status: eq 409
+  res.body.error: eq TERMS_VERSION_OUTDATED
+}
+
+docs {
+  RN11 (decisão 166): o aceite vale só para a versão vigente dos termos. Com outra versão, `409 TERMS_VERSION_OUTDATED`, e nada é criado.
+}

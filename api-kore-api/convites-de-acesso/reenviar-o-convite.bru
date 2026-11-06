@@ -1,0 +1,43 @@
+meta {
+  name: Reenviar o convite
+  type: http
+  seq: 2
+}
+
+post {
+  url: {{baseUrl}}/v1/weddings/{{weddingId}}/access-invitations
+  body: json
+  auth: none
+}
+
+headers {
+  Origin: {{appOrigin}}
+}
+
+body:json {
+  {
+    "kind": "partner",
+    "emails": ["{{partnerEmail}}"]
+  }
+}
+
+script:post-response {
+  if (res.status === 201) bru.setVar("invitationId", res.body.invitations[0].id);
+}
+
+assert {
+  res.status: eq 201
+  res.body.invitations[0].email: eq {{partnerEmail}}
+  res.body.invitations[0].resent: eq true
+}
+
+tests {
+  test("o reenvio recomeça os 30 dias (RN04)", () => {
+    const before = new Date(bru.getVar("invitationExpiresAt"));
+    expect(new Date(res.body.invitations[0].expiresAt).getTime()).to.be.at.least(before.getTime());
+  });
+}
+
+docs {
+  RN04: há um convite pendente por e-mail em cada casamento. Enviar de novo ao mesmo e-mail é um **reenvio** (`resent: true`): gera um link novo, invalida o anterior e recomeça os 30 dias.
+}

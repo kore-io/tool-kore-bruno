@@ -1,0 +1,20 @@
+meta {
+  name: Indicação que não existe
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{baseUrl}}/v1/referrals/nao-existe-bruno
+  body: none
+  auth: none
+}
+
+assert {
+  res.status: eq 404
+  res.body.error: eq REFERRAL_NOT_FOUND
+}
+
+docs {
+  `GET /v1/referrals/{code}` com um código que não existe: `404 REFERRAL_NOT_FOUND`. A mesma resposta vale para indicador inativo, bloqueado ou sem nome (decisão 162), para não revelar o motivo.
+}

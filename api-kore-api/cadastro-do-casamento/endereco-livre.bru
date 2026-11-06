@@ -1,0 +1,32 @@
+meta {
+  name: Endereço livre
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{baseUrl}}/v1/weddings/slug-availability?slug={{weddingSlug}}&eventDate=2027-05-15
+  body: none
+  auth: none
+}
+
+params:query {
+  slug: {{weddingSlug}}
+  eventDate: 2027-05-15
+}
+
+script:pre-request {
+  // Um endereço novo por rodada, no formato da RN04 (a-z, 0-9 e hífen, 3 a 40).
+  bru.setVar("weddingSlug", `bruno-${Date.now().toString(36)}`);
+}
+
+assert {
+  res.status: eq 200
+  res.body.slug: eq {{weddingSlug}}
+  res.body.available: eq true
+  res.body.reason: isNull
+}
+
+docs {
+  `GET /v1/weddings/slug-availability` com um endereço que ninguém usa (RN05): `available: true`, sem motivo.
+}

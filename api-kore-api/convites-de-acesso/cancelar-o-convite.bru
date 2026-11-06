@@ -1,0 +1,23 @@
+meta {
+  name: Cancelar o convite
+  type: http
+  seq: 5
+}
+
+delete {
+  url: {{baseUrl}}/v1/weddings/{{weddingId}}/access-invitations/{{invitationId}}
+  body: none
+  auth: none
+}
+
+headers {
+  Origin: {{appOrigin}}
+}
+
+assert {
+  res.status: eq 204
+}
+
+docs {
+  `DELETE /v1/weddings/{weddingId}/access-invitations/{id}` (RN05, decisão 170): quem enviou ou um dono cancela um convite pendente. O link cancelado cai em Convite inválido.
+}
