@@ -2,6 +2,9 @@ meta {
   name: Sair
   type: http
   seq: 5
+  tags: [
+    local
+  ]
 }
 
 post {
@@ -20,4 +23,6 @@ assert {
 
 docs {
   `POST /v1/auth/logout` (RN09): encerra a sessão deste aparelho.
+
+  Tag `local`: no Local, o login pelo Google logo depois abre a sessão de novo. Fora do Local, sem o Google, o Sair fica de fora para a sessão do código seguir até o cadastro.
 }

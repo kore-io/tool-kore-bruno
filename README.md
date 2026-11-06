@@ -36,7 +36,8 @@ bru run --env "Homologação" --env-var loginEmail=… --env-var loginCode=… -
 
 Tags: `manual` (o botão do e-mail, que vale no lugar do código, e a indicação de um
 indicador de verdade, com `--env-var referralCode=…`) e `local` (o provedor de
-desenvolvimento do Google).
+desenvolvimento do Google e o Sair logo antes dele: fora do Local, sem o Google, a sessão
+do código segue até o fim).
 
 A ordem da rodada: Saúde → Entrar e sair → Indicação → Cadastro do casamento (cria o
 casamento de `loginEmail`) → Convites de acesso (convida, reenvia e cancela o convite do
