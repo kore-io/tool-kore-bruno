@@ -1,0 +1,32 @@
+meta {
+  name: Pedir código de novo (antes de 60 s)
+  type: http
+  seq: 2
+}
+
+post {
+  url: {{baseUrl}}/v1/auth/login-challenges
+  body: json
+  auth: none
+}
+
+headers {
+  Origin: {{appOrigin}}
+}
+
+body:json {
+  {
+    "email": "{{loginEmail}}",
+    "origin": "none"
+  }
+}
+
+assert {
+  res.status: eq 429
+  res.body.error: eq TOO_SOON
+  res.body.resendAvailableAt: isString
+}
+
+docs {
+  RN04: o mesmo e-mail só pede outro código depois de 60 s. Antes disso, `429 TOO_SOON` com `resendAvailableAt`, e o código anterior continua valendo (o "Confirmar código" a seguir usa ele).
+}

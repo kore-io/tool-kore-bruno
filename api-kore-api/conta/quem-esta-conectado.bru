@@ -13,8 +13,11 @@ get {
 assert {
   res.status: eq 200
   res.body.user.email: eq {{loginEmail}}
+  res.body.user.id: eq {{codeUserId}}
 }
 
 docs {
   `GET /v1/me`: a pessoa conectada, o perfil ativo e a hora do login. A leitura também renova a sessão (RN08). Sem sessão, `401 SESSION_EXPIRED`.
+
+  No `bru run`, roda depois do login pelo Google com o mesmo e-mail do código: o `user.id` tem de ser o da conta criada pelo código (RN07, o Google liga à conta que já existe).
 }
