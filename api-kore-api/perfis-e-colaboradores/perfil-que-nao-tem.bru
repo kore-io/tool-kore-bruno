@@ -1,0 +1,30 @@
+meta {
+  name: Escolher um perfil que a conta não tem
+  type: http
+  seq: 2
+}
+
+post {
+  url: {{baseUrl}}/v1/me/active-profile
+  body: json
+  auth: none
+}
+
+headers {
+  Origin: {{appOrigin}}
+}
+
+body:json {
+  {
+    "profile": "planner"
+  }
+}
+
+assert {
+  res.status: eq 403
+  res.body.error: eq PROFILE_NOT_OWNED
+}
+
+docs {
+  RN14: só os perfis da conta. Sem o de cerimonialista, `403 PROFILE_NOT_OWNED`.
+}

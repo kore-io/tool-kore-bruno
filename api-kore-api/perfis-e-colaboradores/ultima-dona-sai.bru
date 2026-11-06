@@ -1,0 +1,24 @@
+meta {
+  name: A última dona tenta sair
+  type: http
+  seq: 6
+}
+
+delete {
+  url: {{baseUrl}}/v1/weddings/{{weddingId}}/memberships/{{ownerMembershipId}}
+  body: none
+  auth: none
+}
+
+headers {
+  Origin: {{appOrigin}}
+}
+
+assert {
+  res.status: eq 409
+  res.body.error: eq LAST_OWNER
+}
+
+docs {
+  RN07: o casamento nunca fica sem dono; a última dona não sai (`409 LAST_OWNER`).
+}

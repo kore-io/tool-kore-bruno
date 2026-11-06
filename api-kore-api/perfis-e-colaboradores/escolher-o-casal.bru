@@ -1,0 +1,31 @@
+meta {
+  name: Escolher o perfil de casal
+  type: http
+  seq: 3
+}
+
+post {
+  url: {{baseUrl}}/v1/me/active-profile
+  body: json
+  auth: none
+}
+
+headers {
+  Origin: {{appOrigin}}
+}
+
+body:json {
+  {
+    "profile": "couple"
+  }
+}
+
+assert {
+  res.status: eq 200
+  res.body.activeProfile: eq couple
+  res.body.home: eq /app
+}
+
+docs {
+  `POST /v1/me/active-profile` (RN14, RN16): troca o perfil da sessão, sem novo login. O `home` do casal é `/app` (decisão 173(e)); o do cerimonialista e o do vendedor são as rotas das fases deles (177(3)).
+}

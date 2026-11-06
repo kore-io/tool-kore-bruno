@@ -1,0 +1,20 @@
+meta {
+  name: Colaboradores de casamento de outra pessoa
+  type: http
+  seq: 7
+}
+
+get {
+  url: {{baseUrl}}/v1/weddings/00000000-0000-4000-8000-000000000000/memberships
+  body: none
+  auth: none
+}
+
+assert {
+  res.status: eq 404
+  res.body.error: eq WEDDING_NOT_FOUND
+}
+
+docs {
+  Isolamento (RN01 de "Papéis e permissões"): sem vínculo, `404 WEDDING_NOT_FOUND`, a mesma resposta de um casamento que não existe.
+}

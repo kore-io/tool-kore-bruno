@@ -1,0 +1,28 @@
+meta {
+  name: Quem está conectado, com os perfis
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{baseUrl}}/v1/me
+  body: none
+  auth: none
+}
+
+assert {
+  res.status: eq 200
+  res.body.profiles.length: eq 1
+  res.body.profiles[0]: eq couple
+  res.body.activeProfile: eq couple
+  res.body.memberships.length: eq 1
+  res.body.memberships[0].weddingId: eq {{weddingId}}
+  res.body.memberships[0].role: eq owner
+  res.body.memberships[0].weddingName: eq Ana & Marcos
+  res.body.memberships[0].city: eq Cuiabá
+  res.body.planner: isNull
+}
+
+docs {
+  `GET /v1/me` completo (RN14; decisões 163, 174(7), 177): os perfis da conta, o perfil ativo, os vínculos com o nome do casamento ("Ana & Marcos", os primeiros nomes) e, para o cerimonialista, a assessoria e o número de casamentos. A dona do cadastro tem só o perfil de casal.
+}
