@@ -1,0 +1,26 @@
+meta {
+  name: Sair (parceiro)
+  type: http
+  seq: 9
+  tags: [
+    local
+  ]
+}
+
+post {
+  url: {{baseUrl}}/v1/auth/logout
+  body: none
+  auth: none
+}
+
+headers {
+  Origin: {{appOrigin}}
+}
+
+assert {
+  res.status: eq 204
+}
+
+docs {
+  Encerra a sessão do parceiro no fim da rodada.
+}

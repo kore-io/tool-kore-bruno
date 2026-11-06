@@ -1,0 +1,35 @@
+meta {
+  name: Confirmar o código do parceiro
+  type: http
+  seq: 2
+  tags: [
+    local
+  ]
+}
+
+post {
+  url: {{baseUrl}}/v1/auth/login-challenges/verify
+  body: json
+  auth: none
+}
+
+headers {
+  Origin: {{appOrigin}}
+}
+
+body:json {
+  {
+    "email": "{{acceptEmail}}",
+    "code": "{{partnerLoginCode}}"
+  }
+}
+
+assert {
+  res.status: eq 200
+  res.body.user.email: eq {{acceptEmail}}
+  res.body.next: eq invite
+}
+
+docs {
+  Com a origem `invite`, o próximo passo é voltar ao convite (`next: invite`, RN06 do Login).
+}
