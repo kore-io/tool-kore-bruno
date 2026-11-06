@@ -18,6 +18,9 @@ const SENSITIVE_FIELDS = new Set(['email', 'code', 'token']);
  */
 const SENSITIVE_QUERY_FIELDS = new Set([...SENSITIVE_FIELDS, 'state']);
 
+/** Listas do corpo com e-mails (o convite): cada item só com {{variável}}. */
+const SENSITIVE_LIST_FIELDS = new Set(['emails']);
+
 const TEMPLATE_ONLY = /^\{\{[\w.-]+\}\}$/;
 
 /** Expressão sobre a resposta, em vars:post-response (ex.: res.body.token). */
@@ -117,6 +120,13 @@ function requestProblems({ json, text }) {
         (typeof value !== 'string' || !TEMPLATE_ONLY.test(value))
       ) {
         problems.push(`campo "${field}" do corpo com valor literal (use uma variável secret)`);
+      }
+      if (
+        SENSITIVE_LIST_FIELDS.has(field) &&
+        (!Array.isArray(value) ||
+          value.some((item) => typeof item !== 'string' || !TEMPLATE_ONLY.test(item)))
+      ) {
+        problems.push(`lista "${field}" do corpo com valor literal (use variáveis)`);
       }
     }
   }

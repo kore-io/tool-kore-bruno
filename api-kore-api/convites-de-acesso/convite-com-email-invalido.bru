@@ -17,8 +17,12 @@ headers {
 body:json {
   {
     "kind": "partner",
-    "emails": ["marcos@"]
+    "emails": ["{{invalidEmail}}"]
   }
+}
+
+script:pre-request {
+  bru.setVar("invalidEmail", "marcos@");
 }
 
 assert {

@@ -48,6 +48,17 @@ describe('requisições (segredos)', () => {
     assert.deepEqual(checkFile(request(post('{ "state": "MT", "slug": "ana-e-marcos" }'))), []);
   });
 
+  it('recusa e-mail literal na lista emails do corpo, e aceita variáveis', () => {
+    assert.deepEqual(
+      checkFile(request(post('{ "kind": "partner", "emails": ["{{partnerEmail}}"] }'))),
+      [],
+    );
+    assert.deepEqual(
+      checkFile(request(post('{ "kind": "partner", "emails": ["ana@gmail.com"] }'))),
+      ['lista "emails" do corpo com valor literal (use variáveis)'],
+    );
+  });
+
   it('recusa código e e-mail literais no corpo', () => {
     assert.deepEqual(checkFile(request(post('{ "email": "ana@exemplo.com", "code": "123456" }'))), [
       'campo "email" do corpo com valor literal (use uma variável secret)',
