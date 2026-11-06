@@ -1,0 +1,34 @@
+meta {
+  name: Aceitar já sendo dona
+  type: http
+  seq: 3
+  tags: [
+    local
+  ]
+}
+
+post {
+  url: {{baseUrl}}/v1/access-invitations/{{inviteToken}}/accept
+  body: json
+  auth: none
+}
+
+headers {
+  Origin: {{appOrigin}}
+}
+
+body:json {
+  {
+    "confirmOtherAccount": true,
+    "myTitle": "groom"
+  }
+}
+
+assert {
+  res.status: eq 409
+  res.body.error: eq ALREADY_MEMBER
+}
+
+docs {
+  Decisão 172(3), revista: quem já tem vínculo com o casamento, dona inclusive, recebe `409 ALREADY_MEMBER`, e nada muda. O convite segue pendente para o parceiro.
+}

@@ -1,0 +1,60 @@
+meta {
+  name: Convidar para recusar
+  type: http
+  seq: 4
+  tags: [
+    local
+  ]
+}
+
+post {
+  url: {{baseUrl}}/v1/weddings/{{weddingId}}/access-invitations
+  body: json
+  auth: none
+}
+
+headers {
+  Origin: {{appOrigin}}
+}
+
+body:json {
+  {
+    "kind": "partner",
+    "emails": ["{{declineEmail}}"]
+  }
+}
+
+script:pre-request {
+  bru.setVar("declineEmail", `recusa-${Date.now().toString(36)}@kore.local`);
+}
+
+script:post-response {
+  // Só no Local: o token do link vem do e-mail do convite, no Mailpit (o banco guarda só
+  // o hash). Fica em variável de execução, nunca em disco.
+  const mailpitUrl = bru.getEnvVar("mailpitUrl");
+  if (mailpitUrl && res.status === 201) {
+    const axios = require("axios");
+    const to = bru.getVar("declineEmail");
+    for (let attempt = 0; attempt < 20; attempt += 1) {
+      await bru.sleep(500);
+      const search = await axios.get(`${mailpitUrl}/api/v1/search`, {
+        params: { query: `to:"${to}"`, limit: 1 },
+      });
+      const latest = search.data.messages?.[0];
+      if (latest) {
+        const message = await axios.get(`${mailpitUrl}/api/v1/message/${latest.ID}`);
+        const token = /\/convite\/([^\s"<>]+)/.exec(message.data.Text);
+        if (token) bru.setVar("declineToken", decodeURIComponent(token[1]));
+        break;
+      }
+    }
+  }
+}
+
+assert {
+  res.status: eq 201
+}
+
+docs {
+  Outro convite do parceiro, para a recusa.
+}

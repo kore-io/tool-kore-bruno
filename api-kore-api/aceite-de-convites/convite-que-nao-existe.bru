@@ -1,0 +1,20 @@
+meta {
+  name: Convite que não existe
+  type: http
+  seq: 7
+}
+
+get {
+  url: {{baseUrl}}/v1/access-invitations/nao-existe-bruno
+  body: none
+  auth: none
+}
+
+assert {
+  res.status: eq 410
+  res.body.error: eq INVITATION_INVALID
+}
+
+docs {
+  Um token que não existe também é Convite inválido (`410`), sem dizer se existiu.
+}

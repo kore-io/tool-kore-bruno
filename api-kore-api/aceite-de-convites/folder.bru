@@ -1,0 +1,10 @@
+meta {
+  name: Aceite de convites
+  seq: 6
+}
+
+docs {
+  Spec "Convites de acesso" (RN06, RN07, RN11, RN12). Roda com a sessão da dona do "Cadastro do casamento": ela convida, e as chamadas leem, tentam aceitar e recusam pelo token do link.
+
+  Tag `local`: o token só existe no e-mail do convite, que no Local chega ao Mailpit. Fora do Local, essas chamadas ficam de fora (`--exclude-tags=local`).
+}
