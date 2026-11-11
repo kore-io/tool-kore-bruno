@@ -1,0 +1,27 @@
+meta {
+  name: PDF para o cerimonial
+  type: http
+  seq: 3
+}
+
+get {
+  url: {{baseUrl}}/v1/weddings/{{weddingId}}/guests/export?format=pdf&who=all&columns=name,party,ageGroup,rsvp,phone,tags
+  body: none
+  auth: none
+}
+
+assert {
+  res.status: eq 200
+}
+
+tests {
+  test("o PDF, sem cache, com o nome .pdf (RN01, RN09, RN10)", () => {
+    expect(res.headers["content-type"]).to.equal("application/pdf");
+    expect(res.headers["cache-control"]).to.equal("no-store");
+    expect(res.headers["content-disposition"]).to.match(/\.pdf"/);
+  });
+}
+
+docs {
+  `format=pdf` (RN01; tela "Screen / Exportar — PDF / A4" do Penpot, decisão 194): A4, o topo com o casal, a data e a cidade e o filtro, o resumo, a tabela por grupo (um grupo de até 10 pessoas não é cortado) e "Página X de Y".
+}

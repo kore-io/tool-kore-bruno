@@ -1,0 +1,39 @@
+meta {
+  name: Criar a tag
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{baseUrl}}/v1/weddings/{{weddingId}}/tags
+  body: json
+  auth: none
+}
+
+headers {
+  Origin: {{appOrigin}}
+}
+
+body:json {
+  {
+    "name": "  Padrinhos  ",
+    "color": "wine"
+  }
+}
+
+script:post-response {
+  if (res.status === 201) bru.setVar("tagId", res.body.id);
+}
+
+assert {
+  res.status: eq 201
+  res.body.name: eq Padrinhos
+  res.body.color: eq wine
+  res.body.guests: eq 0
+}
+
+docs {
+  `POST /v1/weddings/{weddingId}/tags` (RN01 a RN03): até 10 ativas, conferido na transação com o lock do casamento; o nome sai sem espaços nas pontas; a cor é um token do DS (`wine`, `champagne`, `green`, `amber`, `red`, `blue`) ou `null`.
+
+  Erros: `400`, `409 TAG_LIMIT_REACHED`, `409 TAG_NAME_TAKEN`.
+}

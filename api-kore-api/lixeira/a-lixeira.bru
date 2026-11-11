@@ -1,0 +1,24 @@
+meta {
+  name: A Lixeira
+  type: http
+  seq: 5
+}
+
+get {
+  url: {{baseUrl}}/v1/weddings/{{weddingId}}/trash
+  body: none
+  auth: none
+}
+
+assert {
+  res.status: eq 200
+  res.body.data.length: eq 3
+  res.body.data[0].type: eq tag
+  res.body.data[1].type: eq party
+  res.body.data[2].type: eq guest
+  res.body.data[2].partyName: eq Família Moreira
+}
+
+docs {
+  `GET /v1/weddings/{weddingId}/trash` (RN08): todo item ainda não expurgado, do mais novo para o mais antigo. Quem foi junto com o grupo fica dentro do item do grupo.
+}

@@ -1,0 +1,36 @@
+meta {
+  name: Prévia da planilha
+  type: http
+  seq: 4
+}
+
+post {
+  url: {{baseUrl}}/v1/weddings/{{weddingId}}/guest-imports/spreadsheet/preview
+  body: multipartForm
+  auth: none
+}
+
+headers {
+  Origin: {{appOrigin}}
+}
+
+body:multipart-form {
+  file: @file(arquivos/convidados-modelo.xlsx)
+}
+
+assert {
+  res.status: eq 200
+  res.body.fileName: eq convidados-modelo.xlsx
+  res.body.parties: eq 3
+  res.body.counts.valid: eq 4
+  res.body.counts.errors: eq 1
+  res.body.counts.duplicates: eq 1
+  res.body.skipped[0].code: eq PHONE_TOO_SHORT
+  res.body.skipped[1].code: eq DUPLICATE
+}
+
+docs {
+  `POST /v1/weddings/{weddingId}/guest-imports/spreadsheet/preview` (RN03 a RN09): multipart, campo `file`, até 5 MB (`413 FILE_TOO_LARGE`) e 50 MB descompactados. Nada é gravado. Cada falha da linha vem com `code`, `field` e `params`; o app monta o texto.
+
+  Erros: `413 FILE_TOO_LARGE`, `422 NOT_XLSX`, `422 TEMPLATE_MISMATCH`, `422 TOO_MANY_ROWS`.
+}

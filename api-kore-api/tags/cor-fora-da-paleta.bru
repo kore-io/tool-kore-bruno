@@ -1,0 +1,32 @@
+meta {
+  name: Cor fora da paleta
+  type: http
+  seq: 3
+}
+
+post {
+  url: {{baseUrl}}/v1/weddings/{{weddingId}}/tags
+  body: json
+  auth: none
+}
+
+headers {
+  Origin: {{appOrigin}}
+}
+
+body:json {
+  {
+    "name": "Vizinhos",
+    "color": "#123456"
+  }
+}
+
+assert {
+  res.status: eq 400
+  res.body.errors[0].path: eq color
+  res.body.errors[0].code: eq IS_IN
+}
+
+docs {
+  RN03: a cor é um nome de token do Design System, nunca hex (decisões 191(1) e 192(4)).
+}

@@ -1,0 +1,24 @@
+meta {
+  name: Vaga vazia não vai
+  type: http
+  seq: 1
+}
+
+delete {
+  url: {{baseUrl}}/v1/weddings/{{weddingId}}/guests/{{slotId}}
+  body: none
+  auth: none
+}
+
+headers {
+  Origin: {{appOrigin}}
+}
+
+assert {
+  res.status: eq 409
+  res.body.error: eq EMPTY_PLUS_ONE
+}
+
+docs {
+  RN04: a vaga de acompanhante vazia não vai para a lixeira; diminui-se o número de vagas no Editar grupo.
+}

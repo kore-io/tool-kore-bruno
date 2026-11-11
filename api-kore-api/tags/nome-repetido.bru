@@ -1,0 +1,30 @@
+meta {
+  name: Nome repetido
+  type: http
+  seq: 2
+}
+
+post {
+  url: {{baseUrl}}/v1/weddings/{{weddingId}}/tags
+  body: json
+  auth: none
+}
+
+headers {
+  Origin: {{appOrigin}}
+}
+
+body:json {
+  {
+    "name": "padrinhos"
+  }
+}
+
+assert {
+  res.status: eq 409
+  res.body.error: eq TAG_NAME_TAKEN
+}
+
+docs {
+  RN02: o nome é único entre as tags ativas, sem diferenciar maiúsculas.
+}

@@ -1,0 +1,31 @@
+meta {
+  name: Restaurar a tag
+  type: http
+  seq: 6
+}
+
+post {
+  url: {{baseUrl}}/v1/weddings/{{weddingId}}/trash/restore
+  body: json
+  auth: none
+}
+
+headers {
+  Origin: {{appOrigin}}
+}
+
+body:json {
+  {
+    "type": "tag",
+    "id": "{{tagId}}"
+  }
+}
+
+assert {
+  res.status: eq 200
+  res.body.name: eq Padrinhos da Ana
+}
+
+docs {
+  `POST /v1/weddings/{weddingId}/trash/restore` (RN09): a tag volta com os vínculos. Com 10 ativas, `409 TAG_LIMIT_REACHED`; com o nome de uma tag ativa, `409 TAG_NAME_TAKEN` com `conflictName`.
+}

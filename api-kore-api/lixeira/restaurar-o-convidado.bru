@@ -1,0 +1,32 @@
+meta {
+  name: Restaurar o convidado
+  type: http
+  seq: 8
+}
+
+post {
+  url: {{baseUrl}}/v1/weddings/{{weddingId}}/trash/restore
+  body: json
+  auth: none
+}
+
+headers {
+  Origin: {{appOrigin}}
+}
+
+body:json {
+  {
+    "type": "guest",
+    "id": "{{anaClaraId}}"
+  }
+}
+
+assert {
+  res.status: eq 200
+  res.body.name: eq Ana Clara Moreira
+  res.body.restoredParty: isUndefined
+}
+
+docs {
+  RN09: o convidado volta para o grupo; se o grupo estivesse na lixeira, voltaria junto (`restoredParty`).
+}

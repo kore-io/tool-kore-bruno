@@ -1,0 +1,33 @@
+meta {
+  name: Importar a planilha
+  type: http
+  seq: 5
+}
+
+post {
+  url: {{baseUrl}}/v1/weddings/{{weddingId}}/guest-imports/spreadsheet
+  body: multipartForm
+  auth: none
+}
+
+headers {
+  Origin: {{appOrigin}}
+}
+
+body:multipart-form {
+  file: @file(arquivos/convidados-modelo.xlsx)
+}
+
+assert {
+  res.status: eq 201
+  res.body.parties: eq 3
+  res.body.guests: eq 4
+  res.body.skipped: eq 2
+  res.body.tagsCreated.length: eq 2
+}
+
+docs {
+  `POST /v1/weddings/{weddingId}/guest-imports/spreadsheet` (RN01, RN09, RN14): o mesmo arquivo, validado de novo; só as linhas válidas entram, com as tags novas (até 10) e o contato de cada grupo.
+
+  Erros: os da prévia e `409 NOTHING_TO_IMPORT`.
+}

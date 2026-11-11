@@ -1,0 +1,28 @@
+meta {
+  name: Buscar sem acento
+  type: http
+  seq: 4
+}
+
+get {
+  url: {{baseUrl}}/v1/weddings/{{weddingId}}/parties?q=celia
+  body: none
+  auth: none
+}
+
+assert {
+  res.status: eq 200
+  res.body.total: eq 1
+  res.body.data[0].name: eq Família Moreira
+  res.body.data[0].contact.phoneMasked: eq (19) 9****-3310
+}
+
+tests {
+  test("a lista não traz o telefone inteiro (decisão 186(11))", () => {
+    expect(JSON.stringify(res.body)).not.to.contain("998763310");
+  });
+}
+
+docs {
+  `GET /v1/weddings/{weddingId}/parties` (RN13): a busca procura no nome do grupo e dos convidados, sem diferenciar maiúsculas nem acentos. O contato vem com `phoneMasked`, nunca o número inteiro.
+}

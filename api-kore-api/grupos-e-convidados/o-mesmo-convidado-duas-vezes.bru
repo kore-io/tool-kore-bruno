@@ -1,0 +1,40 @@
+meta {
+  name: O mesmo convidado duas vezes
+  type: http
+  seq: 8
+}
+
+patch {
+  url: {{baseUrl}}/v1/weddings/{{weddingId}}/parties/{{partyId}}
+  body: json
+  auth: none
+}
+
+headers {
+  Origin: {{appOrigin}}
+}
+
+body:json {
+  {
+    "guests": [
+      {
+        "id": "{{celiaId}}",
+        "name": "Célia A."
+      },
+      {
+        "id": "{{celiaId}}",
+        "name": "Célia B."
+      }
+    ]
+  }
+}
+
+assert {
+  res.status: eq 400
+  res.body.errors[0].path: eq guests.1.id
+  res.body.errors[0].code: eq DUPLICATE_GUEST
+}
+
+docs {
+  RN09: o mesmo convidado duas vezes no pedido é recusado, e nada é gravado.
+}

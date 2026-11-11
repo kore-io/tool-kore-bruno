@@ -1,0 +1,30 @@
+meta {
+  name: O último convidado não sai
+  type: http
+  seq: 9
+}
+
+post {
+  url: {{baseUrl}}/v1/weddings/{{weddingId}}/guests/{{leonardoId}}/move
+  body: json
+  auth: none
+}
+
+headers {
+  Origin: {{appOrigin}}
+}
+
+body:json {
+  {
+    "partyId": "{{partyId}}"
+  }
+}
+
+assert {
+  res.status: eq 409
+  res.body.error: eq LAST_GUEST
+}
+
+docs {
+  RN08: o último convidado com nome não sai do grupo, nem por mover; o app mostra "…movam o grupo para a lixeira." (casal) ou "…mova…" (cerimonialista).
+}
