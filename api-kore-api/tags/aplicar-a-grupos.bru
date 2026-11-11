@@ -1,0 +1,33 @@
+meta {
+  name: Aplicar a grupos
+  type: http
+  seq: 5
+}
+
+post {
+  url: {{baseUrl}}/v1/weddings/{{weddingId}}/tags/{{tagId}}/apply
+  body: json
+  auth: none
+}
+
+headers {
+  Origin: {{appOrigin}}
+}
+
+body:json {
+  {
+    "partyIds": [
+      "{{partyId}}",
+      "{{padrinhosId}}"
+    ]
+  }
+}
+
+assert {
+  res.status: eq 200
+  res.body.parties: eq 2
+}
+
+docs {
+  `POST /v1/weddings/{weddingId}/tags/{tagId}/apply` (RN08): a seleção múltipla, só grupos; quem já tinha fica como está. Um id que não é de grupo ativo do casamento recusa tudo (`400`).
+}

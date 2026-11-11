@@ -1,0 +1,29 @@
+meta {
+  name: Excel de todos
+  type: http
+  seq: 2
+}
+
+get {
+  url: {{baseUrl}}/v1/weddings/{{weddingId}}/guests/export?format=xlsx&who=all&columns=name,party,ageGroup,dietaryRestriction,rsvp
+  body: none
+  auth: none
+}
+
+assert {
+  res.status: eq 200
+}
+
+tests {
+  test("o Excel, sem cache, com o nome no fuso do casamento (RN09, RN10)", () => {
+    expect(res.headers["content-type"]).to.contain("spreadsheetml.sheet");
+    expect(res.headers["cache-control"]).to.equal("no-store");
+    expect(res.headers["content-disposition"]).to.match(/filename="convidados-.+-\d{4}-\d{2}-\d{2}\.xlsx"/);
+  });
+}
+
+docs {
+  `GET /v1/weddings/{weddingId}/guests/export?format=xlsx` (RN01 a RN10): os convidados ativos com nome (sem vagas vazias), por grupo em ordem alfabética, com as colunas na ordem da tela; toda célula é texto. Grava `guests.exported` no log sem a lista e, com a coluna Restrição alimentar, o evento `exportacao_buffet`.
+
+  Erros: `400` (formato, filtro, coluna, tag), `409 NOTHING_TO_EXPORT`.
+}

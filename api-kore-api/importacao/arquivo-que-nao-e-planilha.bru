@@ -1,0 +1,28 @@
+meta {
+  name: Arquivo que não é planilha
+  type: http
+  seq: 6
+}
+
+post {
+  url: {{baseUrl}}/v1/weddings/{{weddingId}}/guest-imports/spreadsheet/preview
+  body: multipartForm
+  auth: none
+}
+
+headers {
+  Origin: {{appOrigin}}
+}
+
+body:multipart-form {
+  file: @file(arquivos/nao-e-planilha.xlsx)
+}
+
+assert {
+  res.status: eq 422
+  res.body.error: eq NOT_XLSX
+}
+
+docs {
+  RN01: só `.xlsx` (um CSV renomeado não passa).
+}

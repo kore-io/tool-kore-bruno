@@ -1,0 +1,38 @@
+meta {
+  name: Telefone sem DDD
+  type: http
+  seq: 3
+}
+
+post {
+  url: {{baseUrl}}/v1/weddings/{{weddingId}}/parties
+  body: json
+  auth: none
+}
+
+headers {
+  Origin: {{appOrigin}}
+}
+
+body:json {
+  {
+    "name": "Família Rocha",
+    "guests": [
+      {
+        "name": "Márcia Rocha",
+        "phone": "9876-1402"
+      }
+    ]
+  }
+}
+
+assert {
+  res.status: eq 400
+  res.body.errors[0].path: eq guests.0.phone
+  res.body.errors[0].code: eq PHONE_TOO_SHORT
+  res.body.errors[0].params.n: eq 8
+}
+
+docs {
+  RN04 e decisão 190: o erro aponta o convidado pelo caminho e manda o código e o `{n}` (os dígitos como vieram); o app monta o texto pelo perfil ativo. Nada é gravado.
+}

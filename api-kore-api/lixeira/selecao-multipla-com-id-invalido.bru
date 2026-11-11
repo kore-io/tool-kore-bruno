@@ -1,0 +1,34 @@
+meta {
+  name: Seleção múltipla com id inválido
+  type: http
+  seq: 10
+}
+
+post {
+  url: {{baseUrl}}/v1/weddings/{{weddingId}}/parties/trash
+  body: json
+  auth: none
+}
+
+headers {
+  Origin: {{appOrigin}}
+}
+
+body:json {
+  {
+    "partyIds": [
+      "{{partyId}}",
+      "00000000-0000-4000-8000-000000000000"
+    ]
+  }
+}
+
+assert {
+  res.status: eq 400
+  res.body.errors[0].path: eq partyIds.1
+  res.body.errors[0].code: eq PARTY_NOT_FOUND
+}
+
+docs {
+  `POST /v1/weddings/{weddingId}/parties/trash` (RN06): um id que não é de grupo ativo do casamento recusa o pedido inteiro, e nada vai para a lixeira. Para cerimonialista e vendedor, os grupos que já responderam voltam em `skipped`.
+}

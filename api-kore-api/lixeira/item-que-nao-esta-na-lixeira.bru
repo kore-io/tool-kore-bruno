@@ -1,0 +1,31 @@
+meta {
+  name: Item que não está na lixeira
+  type: http
+  seq: 9
+}
+
+post {
+  url: {{baseUrl}}/v1/weddings/{{weddingId}}/trash/restore
+  body: json
+  auth: none
+}
+
+headers {
+  Origin: {{appOrigin}}
+}
+
+body:json {
+  {
+    "type": "party",
+    "id": "00000000-0000-4000-8000-000000000000"
+  }
+}
+
+assert {
+  res.status: eq 404
+  res.body.error: eq TRASH_ITEM_NOT_FOUND
+}
+
+docs {
+  Nunca esteve, já foi restaurado ou já foi apagado de vez: `404 TRASH_ITEM_NOT_FOUND`.
+}

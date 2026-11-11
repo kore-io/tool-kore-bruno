@@ -1,0 +1,23 @@
+meta {
+  name: Painel do grupo
+  type: http
+  seq: 6
+}
+
+get {
+  url: {{baseUrl}}/v1/weddings/{{weddingId}}/parties/{{partyId}}
+  body: none
+  auth: none
+}
+
+assert {
+  res.status: eq 200
+  res.body.guests[1].phoneMasked: eq (19) 9****-3310
+  res.body.guests[2].emailMasked: eq pe***@exemplo.kore.local
+  res.body.internalNote: eq Chegam de São Paulo no sábado.
+  res.body.history.length: eq 0
+}
+
+docs {
+  `GET /v1/weddings/{weddingId}/parties/{partyId}` (RN14): o grupo inteiro, na ordem do grupo (vagas no fim), com o telefone e o e-mail inteiros (o Editar grupo) e mascarados (o painel; decisão 202(3)). O histórico enche na Fase 4.
+}

@@ -1,0 +1,33 @@
+meta {
+  name: Mover de grupo
+  type: http
+  seq: 10
+}
+
+post {
+  url: {{baseUrl}}/v1/weddings/{{weddingId}}/guests/{{pedroId}}/move
+  body: json
+  auth: none
+}
+
+headers {
+  Origin: {{appOrigin}}
+}
+
+body:json {
+  {
+    "partyId": "{{padrinhosId}}"
+  }
+}
+
+assert {
+  res.status: eq 200
+  res.body.fromPartyId: eq {{partyId}}
+  res.body.toPartyId: eq {{padrinhosId}}
+}
+
+docs {
+  `POST /v1/weddings/{weddingId}/guests/{guestId}/move` (RN10): mantém a resposta e as tags do convidado, que entra no fim dos com nome do destino. O contato da origem passa ao próximo; o status de envio dos dois grupos é recalculado (decisão 199(1)).
+
+  Erros: `400` (`partyId` igual ou de outro casamento), `404 GUEST_NOT_FOUND`, `409 LAST_GUEST`, `409 EMPTY_PLUS_ONE`.
+}

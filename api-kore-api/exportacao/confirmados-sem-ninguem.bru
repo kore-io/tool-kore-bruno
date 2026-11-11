@@ -1,0 +1,20 @@
+meta {
+  name: Confirmados sem ninguém
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{baseUrl}}/v1/weddings/{{weddingId}}/guests/export?format=xlsx&who=confirmed&columns=name
+  body: none
+  auth: none
+}
+
+assert {
+  res.status: eq 409
+  res.body.error: eq NOTHING_TO_EXPORT
+}
+
+docs {
+  Ninguém respondeu ainda: o filtro Confirmados não tem convidado (`409 NOTHING_TO_EXPORT`).
+}

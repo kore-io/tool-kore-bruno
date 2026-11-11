@@ -1,0 +1,50 @@
+meta {
+  name: Editar o grupo
+  type: http
+  seq: 7
+}
+
+patch {
+  url: {{baseUrl}}/v1/weddings/{{weddingId}}/parties/{{partyId}}
+  body: json
+  auth: none
+}
+
+headers {
+  Origin: {{appOrigin}}
+}
+
+body:json {
+  {
+    "guests": [
+      {
+        "id": "{{luizId}}",
+        "email": "luiz.moreira@exemplo.kore.local"
+      },
+      {
+        "name": "Ana Clara Moreira",
+        "ageGroup": "child"
+      }
+    ],
+    "internalNote": "Pedro vai de pajem."
+  }
+}
+
+script:post-response {
+  if (res.status === 200) bru.setVar("anaClaraId", res.body.guests[3].id);
+}
+
+assert {
+  res.status: eq 200
+  res.body.guests.length: eq 5
+  res.body.guests[0].email: eq luiz.moreira@exemplo.kore.local
+  res.body.guests[3].name: eq Ana Clara Moreira
+  res.body.guests[4].isPlusOne: eq true
+  res.body.internalNote: eq Pedro vai de pajem.
+}
+
+docs {
+  `PATCH /v1/weddings/{weddingId}/parties/{partyId}` (RN09): edita só o que vem; o convidado sem `id` é o **+ Adicionar convidado** e entra no fim dos com nome, antes das vagas. Não tira convidado (tirar é a lixeira). Sem versão: vale a última gravação.
+
+  Erros: `400` (com `errors[]`), `404 PARTY_NOT_FOUND`, `409 PLUS_ONES_IN_USE` (com `inUse`).
+}

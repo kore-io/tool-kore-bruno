@@ -1,0 +1,28 @@
+meta {
+  name: Convidado para a lixeira
+  type: http
+  seq: 2
+}
+
+delete {
+  url: {{baseUrl}}/v1/weddings/{{weddingId}}/guests/{{anaClaraId}}
+  body: none
+  auth: none
+}
+
+headers {
+  Origin: {{appOrigin}}
+}
+
+assert {
+  res.status: eq 200
+  res.body.name: eq Ana Clara Moreira
+  res.body.partyId: eq {{partyId}}
+  res.body.purgeAt: isString
+}
+
+docs {
+  `DELETE /v1/weddings/{weddingId}/guests/{guestId}` (RN04): o convidado vai sozinho; o contato passa ao próximo, se era ele. `purgeAt` é o dia, no fuso do casamento, até quando restaura (RN10).
+
+  Erros: `403 ALREADY_RESPONDED` (cerimonialista e vendedor, com quem já respondeu), `404 GUEST_NOT_FOUND`, `409 LAST_GUEST`, `409 EMPTY_PLUS_ONE`.
+}

@@ -1,0 +1,19 @@
+meta {
+  name: Coluna fora da lista
+  type: http
+  seq: 4
+}
+
+get {
+  url: {{baseUrl}}/v1/weddings/{{weddingId}}/guests/export?format=xlsx&who=all&columns=name,email
+  body: none
+  auth: none
+}
+
+assert {
+  res.status: eq 400
+}
+
+docs {
+  RN04: as colunas são `name`, `party`, `ageGroup`, `dietaryRestriction`, `rsvp`, `phone` e `tags`. O e-mail não é coluna da exportação (decisão 184(16)).
+}

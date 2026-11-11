@@ -1,0 +1,31 @@
+meta {
+  name: Restaurar o grupo
+  type: http
+  seq: 7
+}
+
+post {
+  url: {{baseUrl}}/v1/weddings/{{weddingId}}/trash/restore
+  body: json
+  auth: none
+}
+
+headers {
+  Origin: {{appOrigin}}
+}
+
+body:json {
+  {
+    "type": "party",
+    "id": "{{padrinhosId}}"
+  }
+}
+
+assert {
+  res.status: eq 200
+  res.body.name: eq Padrinhos
+}
+
+docs {
+  RN09: o grupo volta com os convidados que foram com ele, as respostas, as tags e o mesmo link.
+}

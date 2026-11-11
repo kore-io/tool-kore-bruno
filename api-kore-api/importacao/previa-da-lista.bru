@@ -1,0 +1,37 @@
+meta {
+  name: Prévia da lista
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{baseUrl}}/v1/weddings/{{weddingId}}/guest-imports/paste/preview
+  body: json
+  auth: none
+}
+
+headers {
+  Origin: {{appOrigin}}
+}
+
+body:json {
+  {
+    "text": "Família Moreira: Jorge, Célia\nCarla Nunes + 2 filhos\n+ 0"
+  }
+}
+
+assert {
+  res.status: eq 200
+  res.body.parties: eq 2
+  res.body.guests: eq 5
+  res.body.missingNames: eq 2
+  res.body.droppedLines[0]: eq 3
+  res.body.groups[0].warnings[0]: eq PARTY_NAME_EXISTS
+  res.body.groups[1].guests[1].name: isNull
+}
+
+docs {
+  `POST /v1/weddings/{weddingId}/guest-imports/paste/preview` (RN10, RN11): nada é gravado. O texto antes do primeiro ":" é o grupo; "+ N" cria N pessoas sem nome (o app pede o nome); um grupo sem ninguém sai para `droppedLines`; `PARTY_NAME_EXISTS` avisa sem bloquear.
+
+  Erros: `400`, `422 TOO_MANY_GUESTS`, `429 RATE_LIMITED`.
+}

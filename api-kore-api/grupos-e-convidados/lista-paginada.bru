@@ -1,0 +1,25 @@
+meta {
+  name: Lista paginada
+  type: http
+  seq: 5
+}
+
+get {
+  url: {{baseUrl}}/v1/weddings/{{weddingId}}/parties?limit=1
+  body: none
+  auth: none
+}
+
+assert {
+  res.status: eq 200
+  res.body.data.length: eq 1
+  res.body.total: eq 2
+  res.body.nextCursor: isString
+  res.body.summary.guests: eq 5
+  res.body.summary.namedGuests: eq 4
+  res.body.summary.pending: eq 5
+}
+
+docs {
+  RN13: ordem alfabética sem acento, página por cursor `(nome normalizado, id)`. O `summary` é do casamento inteiro: `guests` conta as vagas, `namedGuests` não (decisão 186(13)).
+}

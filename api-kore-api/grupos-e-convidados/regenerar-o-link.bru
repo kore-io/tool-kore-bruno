@@ -1,0 +1,31 @@
+meta {
+  name: Regenerar o link
+  type: http
+  seq: 11
+}
+
+post {
+  url: {{baseUrl}}/v1/weddings/{{weddingId}}/parties/{{partyId}}/regenerate-link
+  body: none
+  auth: none
+}
+
+headers {
+  Origin: {{appOrigin}}
+}
+
+assert {
+  res.status: eq 200
+  res.body.url: isString
+  res.body.regeneratedAt: isString
+}
+
+tests {
+  test("o link antigo para (RN12)", () => {
+    expect(res.body.url).not.to.equal(bru.getVar("partyLinkUrl"));
+  });
+}
+
+docs {
+  `POST /v1/weddings/{weddingId}/parties/{partyId}/regenerate-link` (RN12): token novo, versão acima; o log `party.link_regenerated` leva só o id do grupo. A confirmação é do app.
+}

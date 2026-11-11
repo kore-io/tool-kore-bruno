@@ -1,0 +1,76 @@
+meta {
+  name: Criar o grupo
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{baseUrl}}/v1/weddings/{{weddingId}}/parties
+  body: json
+  auth: none
+}
+
+headers {
+  Origin: {{appOrigin}}
+}
+
+body:json {
+  {
+    "name": "Família Moreira",
+    "guests": [
+      {
+        "name": "Luiz Moreira",
+        "ageGroup": "adult"
+      },
+      {
+        "name": "Célia Moreira",
+        "ageGroup": "adult",
+        "phone": "(19) 99876-3310"
+      },
+      {
+        "name": "Pedro Moreira",
+        "ageGroup": "child",
+        "email": "Pedro.Moreira@exemplo.kore.local"
+      }
+    ],
+    "plusOneSlots": 1,
+    "internalNote": "Chegam de São Paulo no sábado."
+  }
+}
+
+script:post-response {
+  if (res.status === 201) {
+    bru.setVar("partyId", res.body.id);
+    bru.setVar("luizId", res.body.guests[0].id);
+    bru.setVar("celiaId", res.body.guests[1].id);
+    bru.setVar("pedroId", res.body.guests[2].id);
+    bru.setVar("slotId", res.body.guests[3].id);
+    bru.setVar("partyLinkUrl", res.body.link.url);
+  }
+}
+
+assert {
+  res.status: eq 201
+  res.body.name: eq Família Moreira
+  res.body.guests.length: eq 4
+  res.body.guests[1].phone: eq "+5519998763310"
+  res.body.guests[2].email: eq pedro.moreira@exemplo.kore.local
+  res.body.guests[3].isPlusOne: eq true
+  res.body.guests[3].name: isNull
+  res.body.plusOneSlots: eq 1
+}
+
+tests {
+  test("o contato é o primeiro com telefone ou e-mail (RN06)", () => {
+    expect(res.body.contactGuestId).to.equal(res.body.guests[1].id);
+  });
+  test("o grupo nasce com o link (RN11)", () => {
+    expect(res.body.link.url).to.match(/\/grupo\/[A-Za-z0-9_-]{22}$/);
+  });
+}
+
+docs {
+  `POST /v1/weddings/{weddingId}/parties` (RN03, RN04, RN06, RN07, RN11): o grupo com os convidados na ordem do pedido, a vaga de acompanhante no fim (sem nome, pendente), o contato (o primeiro com telefone ou e-mail) e o link. O telefone sai em E.164 e o e-mail em minúsculas.
+
+  Erros: `400` com `errors[]` (caminho, código e parâmetros; decisão 190), `403 ACTION_NOT_ALLOWED`, `404 WEDDING_NOT_FOUND`.
+}
