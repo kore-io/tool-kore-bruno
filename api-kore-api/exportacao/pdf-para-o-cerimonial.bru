@@ -15,10 +15,10 @@ assert {
 }
 
 tests {
-  test("o PDF, sem cache, com o nome .pdf (RN01, RN09, RN10)", () => {
+  test("o PDF, sem cache, com o nome no fuso do casamento (RN01, RN09, RN10)", () => {
     expect(res.headers["content-type"]).to.equal("application/pdf");
     expect(res.headers["cache-control"]).to.equal("no-store");
-    expect(res.headers["content-disposition"]).to.match(/\.pdf"/);
+    expect(res.headers["content-disposition"]).to.match(/filename="convidados-.+-\d{4}-\d{2}-\d{2}\.pdf"/);
   });
 }
 
