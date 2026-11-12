@@ -1,0 +1,46 @@
+meta {
+  name: Salvar um texto
+  type: http
+  seq: 2
+  tags: [
+    local
+  ]
+}
+
+post {
+  url: {{baseUrl}}/v1/me/planner-templates
+  body: json
+  auth: none
+}
+
+headers {
+  Origin: {{appOrigin}}
+}
+
+body:json {
+  {
+    "kind": "section_content",
+    "sectionType": "story",
+    "name": "Nossa história clássica",
+    "content": {
+      "text": "Conheceram-se em {cidade}. Casam em {data}."
+    }
+  }
+}
+
+script:post-response {
+  if (res.status === 201) bru.setVar("templateId", res.body.id);
+}
+
+assert {
+  res.status: eq 201
+  res.body.kind: eq section_content
+  res.body.sectionType: eq story
+  res.body.locale: eq pt-BR
+}
+
+docs {
+  `POST /v1/me/planner-templates` (Modelos RN01 a RN05): o texto, com os marcadores, sem os dados do casal.
+  
+  Erros: `400`, `409 TEMPLATES_LIMIT` (500), `422` (conteúdo do tipo).
+}

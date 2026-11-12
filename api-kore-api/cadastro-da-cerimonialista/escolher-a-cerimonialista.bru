@@ -1,0 +1,34 @@
+meta {
+  name: Escolher o perfil de cerimonialista
+  type: http
+  seq: 7
+  tags: [
+    local
+  ]
+}
+
+post {
+  url: {{baseUrl}}/v1/me/active-profile
+  body: json
+  auth: none
+}
+
+headers {
+  Origin: {{appOrigin}}
+}
+
+body:json {
+  {
+    "profile": "planner"
+  }
+}
+
+assert {
+  res.status: eq 200
+  res.body.activeProfile: eq planner
+  res.body.home: eq /cerimonialista
+}
+
+docs {
+  `POST /v1/me/active-profile`: o perfil de cerimonialista, já escolhido no cadastro, segue disponível na troca (Meus casamentos é o `home`).
+}

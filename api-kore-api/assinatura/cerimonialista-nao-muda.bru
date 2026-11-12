@@ -1,0 +1,32 @@
+meta {
+  name: A cerimonialista não muda
+  type: http
+  seq: 2
+  tags: [
+    local
+  ]
+}
+
+patch {
+  url: {{baseUrl}}/v1/weddings/{{plannerWeddingId}}/site
+  body: json
+  auth: none
+}
+
+headers {
+  Origin: {{appOrigin}}
+}
+
+body:json {
+  {
+    "showPlannerCredit": false
+  }
+}
+
+assert {
+  res.status: eq 403
+}
+
+docs {
+  Só o dono muda a assinatura (RN05): a cerimonialista recebe `403`.
+}

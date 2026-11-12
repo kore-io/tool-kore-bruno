@@ -1,0 +1,22 @@
+meta {
+  name: Sem perfil ainda
+  type: http
+  seq: 1
+  tags: [
+    local
+  ]
+}
+
+get {
+  url: {{baseUrl}}/v1/me/planner
+  body: none
+  auth: none
+}
+
+assert {
+  res.status: eq 404
+}
+
+docs {
+  `GET /v1/me/planner` (RN09): sem o perfil de cerimonialista, `404`.
+}

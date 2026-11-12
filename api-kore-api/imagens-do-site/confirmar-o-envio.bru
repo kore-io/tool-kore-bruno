@@ -29,9 +29,10 @@ assert {
 }
 
 tests {
-  test("as versões servidas pelo CDN (RN05 e RN06)", () => {
-    expect(res.body.url).to.match(/\/site\/[0-9a-f-]+\/display\.jpg$/);
-    expect(res.body.thumbUrl).to.match(/\/site\/[0-9a-f-]+\/thumb\.jpg$/);
+  test("as versões servidas pelo CDN, pelo token aleatório (RN05, RN06 e decisão 229(f))", () => {
+    expect(res.body.url).to.match(/\/site\/[0-9a-f]{32}\/display\.jpg$/);
+    expect(res.body.thumbUrl).to.match(/\/site\/[0-9a-f]{32}\/thumb\.jpg$/);
+    expect(res.body.url).to.not.contain(res.body.id);
   });
 }
 

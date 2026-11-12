@@ -1,0 +1,34 @@
+meta {
+  name: Nome da assessoria com site
+  type: http
+  seq: 5
+  tags: [
+    local
+  ]
+}
+
+patch {
+  url: {{baseUrl}}/v1/me/planner
+  body: json
+  auth: none
+}
+
+headers {
+  Origin: {{appOrigin}}
+}
+
+body:json {
+  {
+    "creditName": "Prado www.prado.com"
+  }
+}
+
+assert {
+  res.status: eq 400
+  res.body.errors[0].path: eq creditName
+  res.body.errors[0].code: eq CREDIT_NAME_INVALID
+}
+
+docs {
+  `PATCH /v1/me/planner` (RN04, o predicado do Nome da assessoria): sem endereço de site, e-mail ou telefone no nome.
+}

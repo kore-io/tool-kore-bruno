@@ -1,0 +1,31 @@
+meta {
+  name: Preferências gerais
+  type: http
+  seq: 5
+  tags: [
+    local
+  ]
+}
+
+get {
+  url: {{baseUrl}}/v1/me/notification-preferences
+  body: none
+  auth: none
+}
+
+assert {
+  res.status: eq 200
+  res.body.items: isArray
+}
+
+tests {
+  test("os três tipos, com o e-mail no Resumo diário por padrão (RN06)", () => {
+    const types = res.body.items.map((item) => item.type).sort();
+    expect(types).to.eql(["membership_removed", "rsvp", "wedding_published"]);
+    expect(res.body.items.find((item) => item.type === "rsvp").email).to.equal("daily");
+  });
+}
+
+docs {
+  `GET /v1/me/notification-preferences` sem `weddingId` (RN06): a preferência geral da cerimonialista, uma para todos os casamentos.
+}

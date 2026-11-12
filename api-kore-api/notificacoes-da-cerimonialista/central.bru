@@ -1,0 +1,23 @@
+meta {
+  name: Central
+  type: http
+  seq: 1
+  tags: [
+    local
+  ]
+}
+
+get {
+  url: {{baseUrl}}/v1/me/notifications?scope=planner
+  body: none
+  auth: none
+}
+
+assert {
+  res.status: eq 200
+  res.body.items: isArray
+}
+
+docs {
+  `GET /v1/me/notifications?scope=planner` (RN05): as respostas dos casamentos em que colabora, as publicações dos indicados e a colaboração encerrada, sem o casamento de que é dona. Cada item traz `weddingId` e `partnerNames`.
+}

@@ -1,0 +1,23 @@
+meta {
+  name: Contador do sino
+  type: http
+  seq: 2
+  tags: [
+    local
+  ]
+}
+
+get {
+  url: {{baseUrl}}/v1/me/notifications/unread-count?scope=planner
+  body: none
+  auth: none
+}
+
+assert {
+  res.status: eq 200
+  res.body.unreadCount: isNumber
+}
+
+docs {
+  `GET /v1/me/notifications/unread-count?scope=planner`: o mesmo escopo da central.
+}

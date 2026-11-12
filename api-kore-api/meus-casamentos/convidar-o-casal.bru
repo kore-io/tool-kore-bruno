@@ -1,0 +1,41 @@
+meta {
+  name: Convidar o casal
+  type: http
+  seq: 4
+  tags: [
+    local
+  ]
+}
+
+post {
+  url: {{baseUrl}}/v1/weddings/{{plannerWeddingId}}/access-invitations
+  body: json
+  auth: none
+}
+
+headers {
+  Origin: {{appOrigin}}
+}
+
+body:json {
+  {
+    "kind": "couple",
+    "emails": [
+      "{{coupleEmail}}"
+    ]
+  }
+}
+
+script:pre-request {
+  bru.setVar("coupleEmail", `casal-${Date.now().toString(36)}@kore.local`);
+}
+
+assert {
+  res.status: eq 201
+  res.body.invitations[0].kind: eq couple
+  res.body.invitations[0].email: eq {{coupleEmail}}
+}
+
+docs {
+  `POST /v1/weddings/{weddingId}/access-invitations` com `kind: couple` (Convites RN02): quem criou convida o casal. No aceite, o casal assume, e ela recebe "Fernanda e João aceitaram o convite".
+}

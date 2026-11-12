@@ -1,0 +1,22 @@
+meta {
+  name: O excluído some
+  type: http
+  seq: 8
+  tags: [
+    local
+  ]
+}
+
+get {
+  url: {{baseUrl}}/v1/me/weddings/{{deleteWeddingId}}
+  body: none
+  auth: none
+}
+
+assert {
+  res.status: eq 404
+}
+
+docs {
+  Depois de excluído, o casamento sai da lista e do detalhe.
+}

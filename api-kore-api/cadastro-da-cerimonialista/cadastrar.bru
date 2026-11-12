@@ -1,0 +1,43 @@
+meta {
+  name: Cadastrar a cerimonialista
+  type: http
+  seq: 3
+  tags: [
+    local
+  ]
+}
+
+post {
+  url: {{baseUrl}}/v1/me/planner
+  body: json
+  auth: none
+}
+
+headers {
+  Origin: {{appOrigin}}
+}
+
+body:json {
+  {
+    "creditName": "Prado Assessoria",
+    "phone": "(19) 3333-4444",
+    "whatsapp": "(19) 99999-8888",
+    "cities": [
+      "Campinas (SP)",
+      "Valinhos (SP)"
+    ],
+    "termsVersion": "2026-09"
+  }
+}
+
+assert {
+  res.status: eq 201
+  res.body.referralCode: isString
+  res.body.home: eq /cerimonialista
+}
+
+docs {
+  `POST /v1/me/planner` (RN01 a RN04): cria o `Referrer` de cerimonialista e o `Planner`, com o Nome da assessoria (a assinatura do site) e as cidades. O telefone vai em E.164. Devolve o código de indicação, e a sessão já passa ao perfil de cerimonialista (RN05).
+  
+  Erros: `400` (campo), `409 PLANNER_PROFILE_EXISTS`, `409 SELLER_CANNOT_BE_PLANNER`, `409 TERMS_OUTDATED`, `409 PLANNER_SIGNUP_DISABLED`.
+}

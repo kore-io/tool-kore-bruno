@@ -1,0 +1,26 @@
+meta {
+  name: Excluir o modelo
+  type: http
+  seq: 7
+  tags: [
+    local
+  ]
+}
+
+delete {
+  url: {{baseUrl}}/v1/me/planner-templates/{{templateId}}
+  body: none
+  auth: none
+}
+
+headers {
+  Origin: {{appOrigin}}
+}
+
+assert {
+  res.status: eq 204
+}
+
+docs {
+  `DELETE /v1/me/planner-templates/{id}`: o modelo sai; os casamentos em que já foi aplicado não mudam.
+}

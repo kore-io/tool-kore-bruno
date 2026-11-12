@@ -1,0 +1,20 @@
+meta {
+  name: Editor sem colaboradora
+  type: http
+  seq: 5
+}
+
+get {
+  url: {{baseUrl}}/v1/weddings/{{weddingId}}/site
+  body: none
+  auth: none
+}
+
+assert {
+  res.status: eq 200
+  res.body.plannerCredit: isNull
+}
+
+docs {
+  Sem cerimonialista colaboradora, `plannerCredit` é nulo e o Switch não aparece.
+}

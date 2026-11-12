@@ -1,0 +1,39 @@
+meta {
+  name: Cadastro sem os Termos
+  type: http
+  seq: 2
+  tags: [
+    local
+  ]
+}
+
+post {
+  url: {{baseUrl}}/v1/me/planner
+  body: json
+  auth: none
+}
+
+headers {
+  Origin: {{appOrigin}}
+}
+
+body:json {
+  {
+    "creditName": "Prado Assessoria",
+    "phone": "(19) 3333-4444",
+    "whatsapp": "(19) 99999-8888",
+    "cities": [
+      "Campinas (SP)",
+      "Valinhos (SP)"
+    ]
+  }
+}
+
+assert {
+  res.status: eq 400
+  res.body.errors[0].path: eq termsVersion
+}
+
+docs {
+  `POST /v1/me/planner` (RN02): os Termos são obrigatórios no cadastro.
+}

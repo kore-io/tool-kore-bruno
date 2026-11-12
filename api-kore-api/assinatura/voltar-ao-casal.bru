@@ -1,0 +1,33 @@
+meta {
+  name: Voltar ao perfil de casal
+  type: http
+  seq: 3
+  tags: [
+    local
+  ]
+}
+
+post {
+  url: {{baseUrl}}/v1/me/active-profile
+  body: json
+  auth: none
+}
+
+headers {
+  Origin: {{appOrigin}}
+}
+
+body:json {
+  {
+    "profile": "couple"
+  }
+}
+
+assert {
+  res.status: eq 200
+  res.body.activeProfile: eq couple
+}
+
+docs {
+  A dona volta ao perfil de casal para o resto da rodada.
+}
