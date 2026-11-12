@@ -1,0 +1,24 @@
+meta {
+  name: Link atual do grupo
+  type: http
+  seq: 4
+}
+
+get {
+  url: {{baseUrl}}/v1/weddings/{{weddingId}}/parties/{{partyId}}
+  body: none
+  auth: none
+}
+
+script:post-response {
+  if (res.status === 200) bru.setVar("partyToken", res.body.link.url.split("/").pop());
+}
+
+assert {
+  res.status: eq 200
+  res.body.link.url: isString
+}
+
+docs {
+  O link do grupo depois de regenerado (Grupos e convidados): o token vai para a próxima chamada, que é a que o site faz ao abrir `kore.com.br/<slug>/grupo/<token>`.
+}

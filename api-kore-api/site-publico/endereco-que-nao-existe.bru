@@ -1,0 +1,24 @@
+meta {
+  name: Endereço que não existe
+  type: http
+  seq: 2
+}
+
+get {
+  url: {{baseUrl}}/v1/sites/nao-existe-kore-bruno
+  body: none
+  auth: none
+}
+
+headers {
+  Origin: {{siteOrigin}}
+}
+
+assert {
+  res.status: eq 404
+  res.body.error: eq SITE_NOT_FOUND
+}
+
+docs {
+  RN04: "Não encontramos este endereço. Confira o link que você recebeu."
+}

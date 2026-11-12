@@ -1,0 +1,36 @@
+meta {
+  name: Campo fora do tipo
+  type: http
+  seq: 9
+}
+
+put {
+  url: {{baseUrl}}/v1/weddings/{{weddingId}}/site/sections/faq
+  body: json
+  auth: none
+}
+
+headers {
+  Origin: {{appOrigin}}
+}
+
+body:json {
+  {
+    "enabled": true,
+    "title": "Perguntas frequentes",
+    "content": {
+      "items": [],
+      "mapa": "https://maps.example"
+    }
+  }
+}
+
+assert {
+  res.status: eq 400
+  res.body.errors[0].path: eq content.mapa
+  res.body.errors[0].code: eq WHITELIST_VALIDATION
+}
+
+docs {
+  Seções RN12: o `content` é validado pelo DTO do tipo, com `forbidNonWhitelisted`; o caminho do erro leva o prefixo `content.`.
+}

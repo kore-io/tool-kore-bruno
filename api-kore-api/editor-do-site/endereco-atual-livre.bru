@@ -1,0 +1,21 @@
+meta {
+  name: Endereço atual livre
+  type: http
+  seq: 4
+}
+
+get {
+  url: {{baseUrl}}/v1/weddings/slug-availability?slug={{siteSlug}}&weddingId={{weddingId}}
+  body: none
+  auth: none
+}
+
+assert {
+  res.status: eq 200
+  res.body.available: eq true
+  res.body.reason: isNull
+}
+
+docs {
+  `GET /v1/weddings/slug-availability` com o `weddingId` (Dados básicos RN06): o endereço atual do próprio casamento volta livre. Sem vínculo com o casamento, o `weddingId` é ignorado.
+}

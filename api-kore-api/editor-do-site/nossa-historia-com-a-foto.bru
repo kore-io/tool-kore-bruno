@@ -1,0 +1,37 @@
+meta {
+  name: Nossa história com a foto
+  type: http
+  seq: 8
+}
+
+put {
+  url: {{baseUrl}}/v1/weddings/{{weddingId}}/site/sections/story
+  body: json
+  auth: none
+}
+
+headers {
+  Origin: {{appOrigin}}
+}
+
+body:json {
+  {
+    "enabled": true,
+    "title": "Nossa história",
+    "content": {
+      "text": "Nos conhecemos na faculdade.\r\n\r\nE nunca mais nos largamos.",
+      "imageIds": ["{{imageId}}"]
+    }
+  }
+}
+
+assert {
+  res.status: eq 200
+  res.body.empty: eq false
+  res.body.content.images[0].id: eq {{imageId}}
+  res.body.content.text: eq "Nos conhecemos na faculdade.\n\nE nunca mais nos largamos."
+}
+
+docs {
+  Seções RN04, RN05 e RN12: texto simples (o `\r\n` vira `\n`) e até 12 fotos, que precisam ser imagens prontas do casamento (`404 IMAGE_NOT_FOUND` com os ids).
+}

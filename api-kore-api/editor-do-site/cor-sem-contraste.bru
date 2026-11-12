@@ -1,0 +1,36 @@
+meta {
+  name: Cor sem contraste
+  type: http
+  seq: 6
+}
+
+put {
+  url: {{baseUrl}}/v1/weddings/{{weddingId}}/site/appearance
+  body: json
+  auth: none
+}
+
+headers {
+  Origin: {{appOrigin}}
+}
+
+body:json {
+  {
+    "fontPairKey": "romantico",
+    "starterPaletteKey": null,
+    "primaryColor": "#777777",
+    "accentColor": "#7A8B69",
+    "backgroundMode": "light"
+  }
+}
+
+assert {
+  res.status: eq 422
+  res.body.error: eq CONTRAST_TOO_LOW
+  res.body.check: eq primary_foreground
+  res.body.ratio: eq 4.47
+}
+
+docs {
+  Aparência RN04 e RN05: `#777777` dá 4,478:1 com o branco, abaixo de 4,5 sem arredondar; a cor é bloqueada e nada é gravado.
+}

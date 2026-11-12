@@ -1,0 +1,37 @@
+meta {
+  name: Dados básicos
+  type: http
+  seq: 2
+}
+
+patch {
+  url: {{baseUrl}}/v1/weddings/{{weddingId}}/site
+  body: json
+  auth: none
+}
+
+headers {
+  Origin: {{appOrigin}}
+}
+
+body:json {
+  {
+    "city": "  Campinas ",
+    "contactWhatsapp": "(19) 99876-4521",
+    "coverImageId": "{{imageId}}"
+  }
+}
+
+assert {
+  res.status: eq 200
+  res.body.city: eq Campinas
+  res.body.contactWhatsapp: eq "+5519998764521"
+  res.body.cover.id: eq {{imageId}}
+  res.body.siteUpdatedAt: isString
+}
+
+docs {
+  `PATCH /v1/weddings/{weddingId}/site` (Dados básicos RN02 a RN10): só o enviado muda. O WhatsApp passa pelo parser de telefone da F1 e sai em E.164; a capa precisa ser uma imagem pronta do casamento, que entra em uso (Imagens RN08).
+
+  Erros: `400` com `errors[]`, `403 FIELD_NOT_ALLOWED` (a data, a UF ou o endereço diferentes, sem `manage_site_identity`), `404 IMAGE_NOT_FOUND`, `409 SLUG_LOCKED`, `409 SLUG_UNAVAILABLE`.
+}

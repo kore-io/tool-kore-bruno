@@ -1,0 +1,31 @@
+meta {
+  name: Ver como visitante
+  type: http
+  seq: 4
+}
+
+patch {
+  url: {{baseUrl}}/v1/sites/{{siteSlug}}/preview-session
+  body: json
+  auth: none
+}
+
+headers {
+  Origin: {{siteOrigin}}
+}
+
+body:json {
+  {
+    "mode": "visitor"
+  }
+}
+
+assert {
+  res.status: eq 200
+  res.body.mode: eq visitor
+  res.body.party: isNull
+}
+
+docs {
+  `PATCH /v1/sites/{slug}/preview-session` (RN06): a barra da prévia troca o modo e regrava o cookie, sem estender os 30 minutos.
+}

@@ -1,0 +1,36 @@
+meta {
+  name: Link do grupo em rascunho
+  type: http
+  seq: 5
+}
+
+post {
+  url: {{baseUrl}}/v1/sites/{{siteSlug}}/party-session
+  body: json
+  auth: none
+}
+
+headers {
+  Origin: {{siteOrigin}}
+}
+
+body:json {
+  {
+    "token": "{{partyToken}}"
+  }
+}
+
+assert {
+  res.status: eq 404
+  res.body.error: eq SITE_DRAFT
+}
+
+tests {
+  test("sem cookie do grupo no rascunho (RN06)", () => {
+    expect(res.headers["set-cookie"]).to.equal(undefined);
+  });
+}
+
+docs {
+  `POST /v1/sites/{slug}/party-session` (RN06; ADR-36): troca o token do link pelo cookie assinado do grupo. Em rascunho, a mesma resposta com token válido ou não, sem cookie. Publicado, grava `kore_party_<weddingId>` e o site passa a mostrar os locais e o contato. Limite `party_link`: 20 falhas por minuto por IP.
+}

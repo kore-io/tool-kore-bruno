@@ -1,0 +1,42 @@
+meta {
+  name: Confirmar o envio
+  type: http
+  seq: 3
+}
+
+post {
+  url: {{baseUrl}}/v1/weddings/{{weddingId}}/site-images
+  body: json
+  auth: none
+}
+
+headers {
+  Origin: {{appOrigin}}
+}
+
+body:json {
+  {
+    "imageId": "{{imageId}}"
+  }
+}
+
+assert {
+  res.status: eq 201
+  res.body.id: eq {{imageId}}
+  res.body.status: eq ready
+  res.body.width: eq 1200
+  res.body.height: eq 800
+}
+
+tests {
+  test("as versões servidas pelo CDN (RN05 e RN06)", () => {
+    expect(res.body.url).to.match(/\/site\/[0-9a-f-]+\/display\.jpg$/);
+    expect(res.body.thumbUrl).to.match(/\/site\/[0-9a-f-]+\/thumb\.jpg$/);
+  });
+}
+
+docs {
+  `POST /v1/weddings/{weddingId}/site-images` (RN05): confere o tamanho pelo `HeadObject`, o tipo pelo conteúdo e recodifica com o `sharp` (sRGB, sem EXIF, XMP nem GPS), gerando `display.jpg`, `thumb.jpg` e `og.jpg`. A imagem nasce fora de uso: entra na capa ou numa seção pelo Editor do site.
+
+  Erros: `404 IMAGE_NOT_FOUND`, `409 IMAGE_PROCESSING`, `409 UPLOAD_MISSING`, `422 IMAGE_INVALID`.
+}

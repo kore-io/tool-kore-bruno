@@ -1,0 +1,45 @@
+meta {
+  name: Aparência adulterada no cadastro
+  type: http
+  seq: 2
+}
+
+post {
+  url: {{baseUrl}}/v1/weddings
+  body: json
+  auth: none
+}
+
+headers {
+  Origin: {{appOrigin}}
+}
+
+body:json {
+  {
+    "myName": "Ana Beatriz Moreira",
+    "myTitle": "bride",
+    "partnerName": "Marcos Vinícius Rocha",
+    "city": "Campinas",
+    "state": "SP",
+    "slug": "{{weddingSlug}}-simule",
+    "termsVersion": "2026-09",
+    "signupSource": "simulator",
+    "appearance": {
+      "fontPairKey": "romantico",
+      "starterPaletteKey": null,
+      "primaryColor": "#F5F5F5",
+      "accentColor": "#7A8B69",
+      "backgroundMode": "light"
+    }
+  }
+}
+
+assert {
+  res.status: eq 422
+  res.body.error: eq CONTRAST_TOO_LOW
+  res.body.check: eq primary_background
+}
+
+docs {
+  `POST /v1/weddings` com a aparência do simulador (Simule RN10): conferida pelo mesmo guarda-corpo do Editor antes de qualquer gravação. Um rascunho adulterado é recusado com `422`, antes até da conferência de que a pessoa já é dona (por isso dá para provar com a dona da rodada). Válida, grava a aparência e o `appearanceSetAt`.
+}

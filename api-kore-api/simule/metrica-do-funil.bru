@@ -1,0 +1,32 @@
+meta {
+  name: Métrica do funil
+  type: http
+  seq: 1
+  tags: [
+    local
+  ]
+}
+
+post {
+  url: {{baseUrl}}/v1/product-events/simulator
+  body: json
+  auth: none
+}
+
+headers {
+  Origin: {{siteOrigin}}
+}
+
+body:json {
+  {
+    "name": "simule_nomes"
+  }
+}
+
+assert {
+  res.status: eq 204
+}
+
+docs {
+  `POST /v1/product-events/simulator` (RN01 e RN11): grava o nome do passo, sem casamento, sem props e sem o IP. Só existe com `SIMULATOR_ENABLED` (ligada por padrão só no Local e no teste); desligada, `404`. Por isso a tag `local`.
+}

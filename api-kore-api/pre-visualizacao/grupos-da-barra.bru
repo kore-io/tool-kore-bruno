@@ -1,0 +1,25 @@
+meta {
+  name: Grupos da barra
+  type: http
+  seq: 6
+}
+
+get {
+  url: {{baseUrl}}/v1/sites/{{siteSlug}}/preview-parties?q=moreira
+  body: none
+  auth: none
+}
+
+headers {
+  Origin: {{siteOrigin}}
+}
+
+assert {
+  res.status: eq 200
+  res.body.total: gte 1
+  res.body.data[0].name: contains Moreira
+}
+
+docs {
+  `GET /v1/sites/{slug}/preview-parties` (RN06): o Select da barra, até 100 grupos em ordem alfabética, sem a lixeira, com a busca sem acento e o `total`. Só com o cookie da prévia (`401 PREVIEW_REQUIRED`).
+}

@@ -1,0 +1,38 @@
+meta {
+  name: Aparência
+  type: http
+  seq: 5
+}
+
+put {
+  url: {{baseUrl}}/v1/weddings/{{weddingId}}/site/appearance
+  body: json
+  auth: none
+}
+
+headers {
+  Origin: {{appOrigin}}
+}
+
+body:json {
+  {
+    "fontPairKey": "moderno",
+    "starterPaletteKey": "marinho",
+    "primaryColor": "#1f2a44",
+    "accentColor": "#b08d57",
+    "backgroundMode": "light"
+  }
+}
+
+assert {
+  res.status: eq 200
+  res.body.primaryColor: eq "#1F2A44"
+  res.body.accentColor: eq "#B08D57"
+  res.body.primaryForeground: eq "#FFFFFF"
+  res.body.starterPaletteKey: eq marinho
+  res.body.warnings.length: eq 0
+}
+
+docs {
+  `PUT /v1/weddings/{weddingId}/site/appearance` (Aparência RN01 a RN07): o catálogo fixo, as cores em maiúsculas e o guarda-corpo de contraste, com as mesmas contas do app (a fixture `appearance-contrast.fixture.json`). O destaque abaixo de 3:1 só avisa (`ACCENT_LOW_CONTRAST`).
+}

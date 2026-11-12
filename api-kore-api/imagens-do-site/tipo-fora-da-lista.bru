@@ -1,0 +1,31 @@
+meta {
+  name: Tipo fora da lista
+  type: http
+  seq: 5
+}
+
+post {
+  url: {{baseUrl}}/v1/weddings/{{weddingId}}/site-images/upload-authorizations
+  body: json
+  auth: none
+}
+
+headers {
+  Origin: {{appOrigin}}
+}
+
+body:json {
+  {
+    "contentType": "image/png",
+    "sizeBytes": 1024
+  }
+}
+
+assert {
+  res.status: eq 400
+  res.body.errors[0].path: eq contentType
+}
+
+docs {
+  RN03: o app sempre envia JPEG (reduz e grava no aparelho); outro tipo é recusado com `400`.
+}

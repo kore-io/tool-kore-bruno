@@ -1,0 +1,23 @@
+meta {
+  name: Prévia do link
+  type: http
+  seq: 3
+}
+
+get {
+  url: {{baseUrl}}/v1/public/sites/{{siteSlug}}/preview
+  body: none
+  auth: none
+}
+
+assert {
+  res.status: eq 200
+  res.body.state: eq generic
+  res.body.title: isNull
+  res.body.image: isNull
+  res.headers["cache-control"]: eq "public, max-age=300"
+}
+
+docs {
+  `GET /v1/public/sites/{slug}/preview` (RN09), lida pela Pages Function para as metatags Open Graph. Rascunho e endereço que não existe dão a mesma prévia genérica do Kore; publicado, os nomes e a `og.jpg` da capa. Cacheada 5 minutos, sem purga na F2.
+}

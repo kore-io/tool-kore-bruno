@@ -1,0 +1,33 @@
+meta {
+  name: Site em rascunho
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{baseUrl}}/v1/sites/{{siteSlug}}
+  body: none
+  auth: none
+}
+
+headers {
+  Origin: {{siteOrigin}}
+}
+
+assert {
+  res.status: eq 404
+  res.body.error: eq SITE_DRAFT
+  res.headers["cache-control"]: eq "private, no-store"
+  res.headers["x-robots-tag"]: eq "noindex, nofollow"
+  res.headers["access-control-allow-origin"]: eq {{siteOrigin}}
+}
+
+tests {
+  test("o rascunho não leva dado nenhum do casal (RN04)", () => {
+    expect(Object.keys(res.body).sort()).to.eql(["error", "message", "statusCode"]);
+  });
+}
+
+docs {
+  `GET /v1/sites/{slug}` (RN02 a RN05): o site do casal, lido pela função `site_public_by_slug` (o recorte do visitante é feito no banco). Em rascunho, `404 SITE_DRAFT` sem dado nenhum; sem cache e fora dos buscadores, também nos erros.
+}
