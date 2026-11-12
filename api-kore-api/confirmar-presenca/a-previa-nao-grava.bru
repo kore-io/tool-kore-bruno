@@ -1,0 +1,55 @@
+meta {
+  name: A prévia não grava
+  type: http
+  seq: 2
+  tags: [
+    local
+  ]
+}
+
+put {
+  url: {{baseUrl}}/v1/sites/{{siteSlug}}/rsvp
+  body: json
+  auth: none
+}
+
+headers {
+  Origin: {{siteOrigin}}
+}
+
+body:json {
+  {
+    "version": 1,
+    "signedByGuestId": "{{carlaId}}",
+    "guests": [
+      {
+        "id": "{{carlaId}}",
+        "status": "confirmed"
+      },
+      {
+        "id": "{{rafaelId}}",
+        "status": "confirmed"
+      }
+    ]
+  }
+}
+
+script:post-response {
+  // O cookie da prévia (da pasta Pré-visualização) sai, para o grupo responder.
+  // O cookie tem Path=/v1/sites: o jar só o acha pela URL das rotas do site.
+await bru.cookies
+  .jar()
+  .deleteCookie(
+    `${bru.getEnvVar("baseUrl")}/v1/sites/${bru.getVar("siteSlug")}`,
+    `kore_site_preview_${bru.getVar("weddingId")}`,
+  );
+}
+
+assert {
+  res.status: eq 403
+  res.body.error: eq PREVIEW_READ_ONLY
+}
+
+docs {
+  RSVP RN01: com o cookie da prévia, o RSVP é só leitura, e o `PUT` recebe `403 PREVIEW_READ_ONLY`; nada é gravado. Depois, o cookie da prévia sai do jar.
+}

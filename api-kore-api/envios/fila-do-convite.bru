@@ -1,0 +1,32 @@
+meta {
+  name: Fila do convite
+  type: http
+  seq: 2
+  tags: [
+    local
+  ]
+}
+
+get {
+  url: {{baseUrl}}/v1/weddings/{{weddingId}}/deliveries/queue?kind=invite&partyIds={{duarteId}}
+  body: none
+  auth: none
+}
+
+assert {
+  res.status: eq 200
+  res.body.items.length: eq 1
+  res.body.items[0].contact.phoneMasked: isString
+  res.headers["cache-control"]: eq "private, no-store"
+}
+
+tests {
+  test("a URL do WhatsApp vem pronta, com o número inteiro e o link do grupo (RN07)", () => {
+    expect(res.body.items[0].whatsappUrl).to.match(/^https:\/\/wa\.me\/5565998761234\?text=/);
+    expect(res.body.items[0].copyText).to.contain("Família Duarte");
+  });
+}
+
+docs {
+  `GET /v1/weddings/{id}/deliveries/queue` (RN07; decisão 217(10)): por grupo, o contato mascarado e as URLs prontas (`wa.me`, `mailto:`), com os marcadores trocados no servidor; o contato inteiro só nas URLs.
+}

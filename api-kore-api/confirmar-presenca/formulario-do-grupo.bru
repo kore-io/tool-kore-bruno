@@ -1,0 +1,31 @@
+meta {
+  name: Formulário do grupo
+  type: http
+  seq: 3
+  tags: [
+    local
+  ]
+}
+
+get {
+  url: {{baseUrl}}/v1/sites/{{siteSlug}}/rsvp
+  body: none
+  auth: none
+}
+
+headers {
+  Origin: {{siteOrigin}}
+}
+
+assert {
+  res.status: eq 200
+  res.body.state: eq open
+  res.body.rsvpDeadline: eq 2027-05-01
+  res.body.songQuestion.enabled: eq true
+  res.body.guests.length: eq 3
+  res.body.party.version: eq 1
+}
+
+docs {
+  `GET /v1/sites/{slug}/rsvp` (RN03): as respostas atuais, a `version` do grupo, o prazo, a pergunta de música e o contato do casal.
+}

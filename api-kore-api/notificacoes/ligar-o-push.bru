@@ -1,0 +1,33 @@
+meta {
+  name: Ligar o push neste aparelho
+  type: http
+  seq: 7
+}
+
+post {
+  url: {{baseUrl}}/v1/me/push-subscriptions
+  body: json
+  auth: none
+}
+
+headers {
+  Origin: {{appOrigin}}
+}
+
+body:json {
+  {
+    "endpoint": "https://fcm.googleapis.com/fcm/send/kore-bruno-{{weddingId}}",
+    "keys": {
+      "p256dh": "BPk",
+      "auth": "aut"
+    }
+  }
+}
+
+assert {
+  res.status: eq 201
+}
+
+docs {
+  `POST /v1/me/push-subscriptions` (RN07): a assinatura do aparelho, presa à sessão; a preferência push fica ligada. O envio de verdade precisa de um navegador inscrito.
+}

@@ -1,0 +1,21 @@
+meta {
+  name: Resposta alterada no histórico
+  type: http
+  seq: 3
+}
+
+get {
+  url: {{baseUrl}}/v1/weddings/{{weddingId}}/parties/{{duarteId}}
+  body: none
+  auth: none
+}
+
+assert {
+  res.status: eq 200
+  res.body.history[0].kind: eq response
+  res.body.history[0].actor: eq couple
+}
+
+docs {
+  RN05: "Resposta alterada por {nome}: {convidado} vai".
+}

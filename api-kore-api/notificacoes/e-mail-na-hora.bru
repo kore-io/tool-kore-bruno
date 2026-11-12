@@ -1,0 +1,37 @@
+meta {
+  name: E-mail na hora
+  type: http
+  seq: 5
+}
+
+put {
+  url: {{baseUrl}}/v1/me/notification-preferences
+  body: json
+  auth: none
+}
+
+headers {
+  Origin: {{appOrigin}}
+}
+
+script:pre-request {
+  // O campo do corpo se chama "email", mas é a frequência (Na hora), não um endereço.
+  bru.setVar("emailFrequency", "immediate");
+}
+
+body:json {
+  {
+    "weddingId": "{{weddingId}}",
+    "type": "rsvp",
+    "email": "{{emailFrequency}}"
+  }
+}
+
+assert {
+  res.status: eq 200
+  res.body.email: eq immediate
+}
+
+docs {
+  `PUT /v1/me/notification-preferences`: o e-mail de cada tipo, gravado na hora (Na hora, no máximo um a cada 15 minutos; Resumo diário às 20h no fuso do casamento; Desligado).
+}

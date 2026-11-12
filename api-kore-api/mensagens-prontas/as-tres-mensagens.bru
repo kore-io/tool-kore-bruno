@@ -1,0 +1,28 @@
+meta {
+  name: As três mensagens
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{baseUrl}}/v1/weddings/{{weddingId}}/message-templates
+  body: none
+  auth: none
+}
+
+assert {
+  res.status: eq 200
+  res.body.items.length: eq 3
+  res.body.items[0].kind: eq invite
+  res.body.items[0].isDefault: eq true
+}
+
+tests {
+  test("o convite padrão leva o {link} (RN06)", () => {
+    expect(res.body.items[0].body).to.contain("{link}");
+  });
+}
+
+docs {
+  `GET /v1/weddings/{id}/message-templates`: convite, save the date e lembrete; o lembrete padrão muda com o prazo.
+}

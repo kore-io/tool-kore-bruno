@@ -1,0 +1,30 @@
+meta {
+  name: Definir o prazo
+  type: http
+  seq: 3
+}
+
+put {
+  url: {{baseUrl}}/v1/weddings/{{weddingId}}/rsvp-deadline
+  body: json
+  auth: none
+}
+
+headers {
+  Origin: {{appOrigin}}
+}
+
+body:json {
+  {
+    "rsvpDeadline": "2027-05-01"
+  }
+}
+
+assert {
+  res.status: eq 200
+  res.body.rsvpDeadline: eq 2027-05-01
+}
+
+docs {
+  `PUT /v1/weddings/{id}/rsvp-deadline` (RN01 a RN03): o dono e a colaboradora; nulo tira o prazo.
+}

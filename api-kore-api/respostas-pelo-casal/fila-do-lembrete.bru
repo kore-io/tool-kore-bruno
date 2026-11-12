@@ -1,0 +1,20 @@
+meta {
+  name: Fila do lembrete
+  type: http
+  seq: 4
+}
+
+get {
+  url: {{baseUrl}}/v1/weddings/{{weddingId}}/parties?remind=true
+  body: none
+  auth: none
+}
+
+assert {
+  res.status: eq 200
+  res.body.data: isArray
+}
+
+docs {
+  `GET /v1/weddings/{id}/parties?remind=true` (RN07; T5): os grupos já enviados com algum convidado com nome sem resposta; a vaga não conta. Cada grupo traz `lastResponse` (quem assinou ou quem alterou).
+}

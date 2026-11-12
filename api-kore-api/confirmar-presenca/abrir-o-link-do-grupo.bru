@@ -1,0 +1,33 @@
+meta {
+  name: Abrir o link do grupo
+  type: http
+  seq: 1
+  tags: [
+    local
+  ]
+}
+
+post {
+  url: {{baseUrl}}/v1/sites/{{siteSlug}}/party-session
+  body: json
+  auth: none
+}
+
+headers {
+  Origin: {{siteOrigin}}
+}
+
+body:json {
+  {
+    "token": "{{duarteToken}}"
+  }
+}
+
+assert {
+  res.status: eq 200
+  res.body.party.name: eq Família Duarte
+}
+
+docs {
+  RSVP RN02: a troca do token por `POST` grava o convite como visualizado (só a primeira vez); um `GET` não grava nada.
+}

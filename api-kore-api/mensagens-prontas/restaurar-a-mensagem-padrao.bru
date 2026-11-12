@@ -1,0 +1,30 @@
+meta {
+  name: Restaurar a mensagem padrão
+  type: http
+  seq: 4
+}
+
+put {
+  url: {{baseUrl}}/v1/weddings/{{weddingId}}/message-templates/invite
+  body: json
+  auth: none
+}
+
+headers {
+  Origin: {{appOrigin}}
+}
+
+body:json {
+  {
+    "reset": true
+  }
+}
+
+assert {
+  res.status: eq 200
+  res.body.isDefault: eq true
+}
+
+docs {
+  `{ "reset": true }` apaga a guardada, e volta a valer a padrão.
+}

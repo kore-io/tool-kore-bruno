@@ -1,0 +1,30 @@
+meta {
+  name: Prazo no passado
+  type: http
+  seq: 1
+}
+
+put {
+  url: {{baseUrl}}/v1/weddings/{{weddingId}}/rsvp-deadline
+  body: json
+  auth: none
+}
+
+headers {
+  Origin: {{appOrigin}}
+}
+
+body:json {
+  {
+    "rsvpDeadline": "2020-01-15"
+  }
+}
+
+assert {
+  res.status: eq 422
+  res.body.error: eq DEADLINE_IN_PAST
+}
+
+docs {
+  RN01: "Essa data já passou. Escolham uma data a partir de hoje."
+}

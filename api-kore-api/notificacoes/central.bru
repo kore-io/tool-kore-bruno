@@ -1,0 +1,26 @@
+meta {
+  name: Central
+  type: http
+  seq: 2
+}
+
+get {
+  url: {{baseUrl}}/v1/me/notifications?weddingId={{weddingId}}
+  body: none
+  auth: none
+}
+
+assert {
+  res.status: eq 200
+  res.body.items: isArray
+}
+
+tests {
+  test("sem a restrição alimentar (RN04)", () => {
+    expect(JSON.stringify(res.body)).to.not.contain("glúten");
+  });
+}
+
+docs {
+  `GET /v1/me/notifications` (Central RN04 e RN06): mais novas primeiro, 20 por vez; "Família Duarte respondeu o convite" ou "{n} grupos responderam".
+}
