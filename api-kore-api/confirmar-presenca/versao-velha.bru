@@ -1,0 +1,45 @@
+meta {
+  name: Versão velha
+  type: http
+  seq: 6
+  tags: [
+    local
+  ]
+}
+
+put {
+  url: {{baseUrl}}/v1/sites/{{siteSlug}}/rsvp
+  body: json
+  auth: none
+}
+
+headers {
+  Origin: {{siteOrigin}}
+}
+
+body:json {
+  {
+    "version": 1,
+    "signedByGuestId": "{{carlaId}}",
+    "guests": [
+      {
+        "id": "{{carlaId}}",
+        "status": "confirmed"
+      },
+      {
+        "id": "{{rafaelId}}",
+        "status": "confirmed"
+      }
+    ]
+  }
+}
+
+assert {
+  res.status: eq 409
+  res.body.error: eq RSVP_CHANGED
+  res.body.current.party.version: eq 2
+}
+
+docs {
+  RN07 (D11): o `PUT` com a versão velha recebe `409 RSVP_CHANGED` com as respostas atuais ("As respostas deste grupo mudaram enquanto vocês preenchiam.").
+}

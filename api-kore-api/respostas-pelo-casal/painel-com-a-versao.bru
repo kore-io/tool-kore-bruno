@@ -1,0 +1,25 @@
+meta {
+  name: Painel com a versão
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{baseUrl}}/v1/weddings/{{weddingId}}/parties/{{duarteId}}
+  body: none
+  auth: none
+}
+
+script:post-response {
+  if (res.status === 200) bru.setVar("duarteVersion", res.body.version);
+}
+
+assert {
+  res.status: eq 200
+  res.body.version: isNumber
+  res.body.history: isArray
+}
+
+docs {
+  `GET /v1/weddings/{id}/parties/{partyId}` ganha a `version` e o `history[]` (RN05): envios, a visita e as respostas, as 50 mais recentes, sem a restrição alimentar.
+}

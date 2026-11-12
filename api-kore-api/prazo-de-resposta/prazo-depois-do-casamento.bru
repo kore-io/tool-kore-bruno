@@ -1,0 +1,31 @@
+meta {
+  name: Prazo depois do casamento
+  type: http
+  seq: 2
+}
+
+put {
+  url: {{baseUrl}}/v1/weddings/{{weddingId}}/rsvp-deadline
+  body: json
+  auth: none
+}
+
+headers {
+  Origin: {{appOrigin}}
+}
+
+body:json {
+  {
+    "rsvpDeadline": "2027-05-20"
+  }
+}
+
+assert {
+  res.status: eq 422
+  res.body.error: eq DEADLINE_AFTER_EVENT
+  res.body.eventDate: eq 2027-05-15
+}
+
+docs {
+  RN01: o prazo vai até o dia do casamento; o `eventDate` vem no corpo para o texto ("O prazo precisa ser até o dia do casamento, {data}.").
+}

@@ -1,0 +1,33 @@
+meta {
+  name: Endereço travado
+  type: http
+  seq: 5
+  tags: [
+    local
+  ]
+}
+
+patch {
+  url: {{baseUrl}}/v1/weddings/{{weddingId}}/site
+  body: json
+  auth: none
+}
+
+headers {
+  Origin: {{appOrigin}}
+}
+
+body:json {
+  {
+    "slug": "outro-endereco-kore-bruno"
+  }
+}
+
+assert {
+  res.status: eq 409
+  res.body.error: eq SLUG_LOCKED
+}
+
+docs {
+  RN06: depois de publicar, o endereço não muda mais ("O site já foi publicado, então o endereço não muda mais.").
+}

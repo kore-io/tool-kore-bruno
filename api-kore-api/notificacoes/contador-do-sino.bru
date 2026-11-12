@@ -1,0 +1,20 @@
+meta {
+  name: Contador do sino
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{baseUrl}}/v1/me/notifications/unread-count?weddingId={{weddingId}}
+  body: none
+  auth: none
+}
+
+assert {
+  res.status: eq 200
+  res.body.unreadCount: isNumber
+}
+
+docs {
+  `GET /v1/me/notifications/unread-count` (Central RN06): o sino, a cada 60 s com a aba visível.
+}

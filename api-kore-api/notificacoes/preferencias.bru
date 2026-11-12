@@ -1,0 +1,22 @@
+meta {
+  name: Preferências
+  type: http
+  seq: 4
+}
+
+get {
+  url: {{baseUrl}}/v1/me/notification-preferences?weddingId={{weddingId}}
+  body: none
+  auth: none
+}
+
+assert {
+  res.status: eq 200
+  res.body.items[0].type: eq rsvp
+  res.body.items[0].inApp: eq true
+  res.body.push.subscribed: isBoolean
+}
+
+docs {
+  `GET /v1/me/notification-preferences` (Central RN07): sem linha gravada, o padrão (central sempre, e-mail no Resumo diário, push desligado); o push deste aparelho e a chave pública VAPID (nula sem push no ambiente).
+}

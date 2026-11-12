@@ -1,0 +1,25 @@
+meta {
+  name: Lista de músicas
+  type: http
+  seq: 1
+  tags: [
+    local
+  ]
+}
+
+get {
+  url: {{baseUrl}}/v1/weddings/{{weddingId}}/song-suggestions
+  body: none
+  auth: none
+}
+
+assert {
+  res.status: eq 200
+  res.body.total: eq 1
+  res.body.items[0].song: eq Evidências
+  res.body.items[0].partyName: eq Família Duarte
+}
+
+docs {
+  RN05: Música, Quem sugeriu, Grupo e Data da sugestão, da mais antiga para a mais nova.
+}

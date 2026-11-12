@@ -1,0 +1,30 @@
+meta {
+  name: Convite sem o {link}
+  type: http
+  seq: 2
+}
+
+put {
+  url: {{baseUrl}}/v1/weddings/{{weddingId}}/message-templates/invite
+  body: json
+  auth: none
+}
+
+headers {
+  Origin: {{appOrigin}}
+}
+
+body:json {
+  {
+    "body": "Oi, {nome_do_grupo}! Contamos com você."
+  }
+}
+
+assert {
+  res.status: eq 422
+  res.body.error: eq LINK_PLACEHOLDER_MISSING
+}
+
+docs {
+  RN06 (D15): "A mensagem precisa ter o {link}, senão o grupo não consegue responder."
+}

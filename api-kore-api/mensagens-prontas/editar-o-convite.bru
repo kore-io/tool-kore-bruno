@@ -1,0 +1,32 @@
+meta {
+  name: Editar o convite
+  type: http
+  seq: 3
+}
+
+put {
+  url: {{baseUrl}}/v1/weddings/{{weddingId}}/message-templates/invite
+  body: json
+  auth: none
+}
+
+headers {
+  Origin: {{appOrigin}}
+}
+
+body:json {
+  {
+    "body": "Oi, {nome_do_grupo}! Vamos nos casar em {data}. Confirme aqui: {link}",
+    "subject": "Nosso convite"
+  }
+}
+
+assert {
+  res.status: eq 200
+  res.body.isDefault: eq false
+  res.body.subject: eq Nosso convite
+}
+
+docs {
+  `PUT /v1/weddings/{id}/message-templates/{kind}`: a mensagem fica para os próximos envios; o assunto é só do e-mail, uma linha até 120.
+}

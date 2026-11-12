@@ -1,0 +1,30 @@
+meta {
+  name: Dashboard do casal
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{baseUrl}}/v1/weddings/{{weddingId}}/dashboard
+  body: none
+  auth: none
+}
+
+assert {
+  res.status: eq 200
+  res.body.role: eq owner
+  res.body.stats.partiesTotal: isNumber
+  res.body.checklist: isArray
+  res.body.recentActivity: isArray
+  res.headers["cache-control"]: eq "private, no-store"
+}
+
+tests {
+  test("o Checklist começa pelos convidados e pela aparência (RN03)", () => {
+    expect(res.body.checklist.map((item) => item.key).slice(0, 2)).to.eql(["guests", "appearance"]);
+  });
+}
+
+docs {
+  `GET /v1/weddings/{id}/dashboard` (RN01 a RN08): qualquer vínculo, sem cache; a Atividade recente traz as notificações da dona, sem restrição nem nome de convidado.
+}

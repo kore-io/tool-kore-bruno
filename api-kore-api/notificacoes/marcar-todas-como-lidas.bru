@@ -1,0 +1,23 @@
+meta {
+  name: Marcar todas como lidas
+  type: http
+  seq: 3
+}
+
+post {
+  url: {{baseUrl}}/v1/me/notifications/read-all?weddingId={{weddingId}}
+  body: none
+  auth: none
+}
+
+headers {
+  Origin: {{appOrigin}}
+}
+
+assert {
+  res.status: eq 204
+}
+
+docs {
+  `POST /v1/me/notifications/read-all` (Central RN06).
+}

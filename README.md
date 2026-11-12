@@ -36,16 +36,18 @@ bru run --env Local --env-var loginEmail=voce+$(date +%s)@kore.local --exclude-t
 bru run --env "Homologação" --env-var loginEmail=… --env-var loginCode=… --exclude-tags=manual,local --delay 700
 ```
 
-A rodada completa faz 115 pedidos, acima do limite geral de 100 por minuto por IP: o
-`--delay 700` (milissegundos entre os pedidos) a deixa em cerca de 90 segundos, abaixo do
+A rodada completa faz 154 pedidos, acima do limite geral de 100 por minuto por IP: o
+`--delay 700` (milissegundos entre os pedidos) a deixa em cerca de 2 minutos, abaixo do
 limite. Sem o `--delay`, o fim da rodada recebe `429 RATE_LIMITED`. Os convidados criados têm
 e-mail `@exemplo.kore.local` (decisão 181).
 
 Tags: `manual` (o botão do e-mail, que vale no lugar do código, e a indicação de um
 indicador de verdade, com `--env-var referralCode=…`) e `local` (o provedor de
 desenvolvimento do Google e o Sair logo antes dele: fora do Local, sem o Google, a sessão
-do código segue até o fim; e a métrica do simulador, que só existe com `SIMULATOR_ENABLED`,
-ligada só no Local até o PO liberar).
+do código segue até o fim; a métrica do simulador, que só existe com `SIMULATOR_ENABLED`,
+ligada só no Local até o PO liberar; e a publicação por Cortesia, com o que depende do site
+publicado (envios, QR, Confirmar presença e músicas), porque `COURTESY_PUBLICATION_ENABLED`
+só pode ser ligada no Local).
 
 A ordem da rodada: Saúde → Entrar e sair → Indicação → Cadastro do casamento (cria o
 casamento de `loginEmail`) → Convites de acesso (convida, reenvia e cancela o convite do
@@ -57,7 +59,14 @@ lista e a planilha de `arquivos/convidados-modelo.xlsx`) → Exportação (Excel
 armazenamento a `arquivos/foto-do-ensaio.jpg` e confirma) → Editor do site (Dados básicos,
 endereço, Aparência e seções) → Site público (o rascunho, que responde `SITE_DRAFT`, a prévia
 do link e o link do grupo) → Pré-visualização (o rascunho como grupo e como visitante, pela
-prévia) → Simule o site → Conta →
+prévia) → Simule o site → **Fases 4 e 5:** Publicação por Cortesia (os limites da data de
+saída do ar e a publicação) → Prazo de resposta → Mensagens prontas (edita e restaura o
+convite) → Pergunta de música → Envios (cria a Família Duarte, lê a fila com a URL do WhatsApp,
+marca o envio e baixa o QR) → Confirmar presença (abre o link do grupo, a prévia que não
+grava e tira o cookie da prévia do jar, responde pelo grupo e a versão velha) → Respostas
+pelo casal (o Painel com a versão e o histórico, alterar a resposta e a fila do lembrete) →
+Músicas (a lista e o Excel para o DJ) → Dashboard → Notificações (o sino, a central, ler
+todas, as preferências e o push deste aparelho) → Conta →
 Aceite pelo parceiro (entra com o e-mail convidado, aceita, vira dono e sai). O endereço do site e os
 e-mails do parceiro são gerados a cada rodada. Os tokens dos convites e o código do
 parceiro vêm do Mailpit, então essas chamadas têm a tag `local`.

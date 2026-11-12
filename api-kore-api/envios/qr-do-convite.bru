@@ -1,0 +1,36 @@
+meta {
+  name: QR do convite
+  type: http
+  seq: 4
+  tags: [
+    local
+  ]
+}
+
+post {
+  url: {{baseUrl}}/v1/weddings/{{weddingId}}/parties/qr-codes
+  body: json
+  auth: none
+}
+
+headers {
+  Origin: {{appOrigin}}
+}
+
+body:json {
+  {
+    "partyIds": [
+      "{{duarteId}}"
+    ],
+    "format": "png"
+  }
+}
+
+assert {
+  res.status: eq 200
+  res.headers["content-type"]: eq image/png
+}
+
+docs {
+  `POST /v1/weddings/{id}/parties/qr-codes` (RN09): PNG com 1 grupo, PDF com um QR por página; o QR leva só o link do grupo, e baixar marca o envio com o canal QR.
+}

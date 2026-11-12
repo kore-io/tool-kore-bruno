@@ -1,0 +1,52 @@
+meta {
+  name: Responder pelo grupo
+  type: http
+  seq: 5
+  tags: [
+    local
+  ]
+}
+
+put {
+  url: {{baseUrl}}/v1/sites/{{siteSlug}}/rsvp
+  body: json
+  auth: none
+}
+
+headers {
+  Origin: {{siteOrigin}}
+}
+
+body:json {
+  {
+    "version": 1,
+    "signedByGuestId": "{{carlaId}}",
+    "guests": [
+      {
+        "id": "{{carlaId}}",
+        "status": "confirmed",
+        "dietaryRestriction": "sem glúten",
+        "songSuggestion": "Evidências"
+      },
+      {
+        "id": "{{rafaelId}}",
+        "status": "declined"
+      },
+      {
+        "id": "{{duarteSlotId}}",
+        "status": "confirmed",
+        "name": "Rita Souza"
+      }
+    ]
+  }
+}
+
+assert {
+  res.status: eq 200
+  res.body.party.version: eq 2
+  res.body.guests[2].name: eq Rita Souza
+}
+
+docs {
+  `PUT /v1/sites/{slug}/rsvp` (RN04 a RN07), na transação do grupo: o histórico de quem assinou, os números, o grupo "Respondido", a notificação dos donos e, depois do commit, o e-mail e o push. "Vou levar" com o nome conta o acompanhante como confirmado.
+}

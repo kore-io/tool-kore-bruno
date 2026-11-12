@@ -1,0 +1,29 @@
+meta {
+  name: Desligar o push neste aparelho
+  type: http
+  seq: 8
+}
+
+delete {
+  url: {{baseUrl}}/v1/me/push-subscriptions
+  body: json
+  auth: none
+}
+
+headers {
+  Origin: {{appOrigin}}
+}
+
+body:json {
+  {
+    "endpoint": "https://fcm.googleapis.com/fcm/send/kore-bruno-{{weddingId}}"
+  }
+}
+
+assert {
+  res.status: eq 204
+}
+
+docs {
+  `DELETE /v1/me/push-subscriptions` (RN07): apaga a deste aparelho; a preferência só desliga quando sai a última. O Sair também apaga (RN08).
+}

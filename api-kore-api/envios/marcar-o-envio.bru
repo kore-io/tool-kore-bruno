@@ -1,0 +1,38 @@
+meta {
+  name: Marcar o envio pelo WhatsApp
+  type: http
+  seq: 3
+  tags: [
+    local
+  ]
+}
+
+post {
+  url: {{baseUrl}}/v1/weddings/{{weddingId}}/deliveries
+  body: json
+  auth: none
+}
+
+headers {
+  Origin: {{appOrigin}}
+}
+
+body:json {
+  {
+    "partyIds": [
+      "{{duarteId}}"
+    ],
+    "kind": "invite",
+    "channel": "whatsapp"
+  }
+}
+
+assert {
+  res.status: eq 200
+  res.body.parties[0].deliveryStatus: eq sent
+  res.body.parties[0].lastChannel: eq whatsapp
+}
+
+docs {
+  `POST /v1/weddings/{id}/deliveries` (RN07 e RN08): o clique marca o envio; o 1º envio do convite grava o `sentAt` e o evento `grupo_enviado`.
+}

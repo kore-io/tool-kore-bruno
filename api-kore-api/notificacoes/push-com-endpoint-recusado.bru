@@ -1,0 +1,34 @@
+meta {
+  name: Push com endpoint recusado
+  type: http
+  seq: 6
+}
+
+post {
+  url: {{baseUrl}}/v1/me/push-subscriptions
+  body: json
+  auth: none
+}
+
+headers {
+  Origin: {{appOrigin}}
+}
+
+body:json {
+  {
+    "endpoint": "https://169.254.169.254/latest/meta-data",
+    "keys": {
+      "p256dh": "BPk",
+      "auth": "aut"
+    }
+  }
+}
+
+assert {
+  res.status: eq 400
+  res.body.error: eq PUSH_ENDPOINT_NOT_ALLOWED
+}
+
+docs {
+  E-mail e push RN07 (decisão 217(c)): só `https`, sem IP, sem porta fora da 443 e numa lista fechada dos serviços de push, contra SSRF.
+}

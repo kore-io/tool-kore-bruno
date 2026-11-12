@@ -1,0 +1,52 @@
+meta {
+  name: Criar a Família Duarte
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{baseUrl}}/v1/weddings/{{weddingId}}/parties
+  body: json
+  auth: none
+}
+
+headers {
+  Origin: {{appOrigin}}
+}
+
+body:json {
+  {
+    "name": "Família Duarte",
+    "guests": [
+      {
+        "name": "Carla Duarte",
+        "ageGroup": "adult",
+        "phone": "(65) 99876-1234"
+      },
+      {
+        "name": "Rafael Duarte",
+        "ageGroup": "adult"
+      }
+    ],
+    "plusOneSlots": 1
+  }
+}
+
+script:post-response {
+  if (res.status === 201) {
+    bru.setVar("duarteId", res.body.id);
+    bru.setVar("carlaId", res.body.guests[0].id);
+    bru.setVar("rafaelId", res.body.guests[1].id);
+    bru.setVar("duarteSlotId", res.body.guests[2].id);
+    bru.setVar("duarteToken", res.body.link.url.split("/").pop());
+  }
+}
+
+assert {
+  res.status: eq 201
+  res.body.guests.length: eq 3
+}
+
+docs {
+  O grupo dos envios e do RSVP das F4 e F5, com a Carla como contato (com telefone) e uma vaga de acompanhante.
+}

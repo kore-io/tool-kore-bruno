@@ -1,0 +1,40 @@
+meta {
+  name: Falta a resposta de alguém
+  type: http
+  seq: 4
+  tags: [
+    local
+  ]
+}
+
+put {
+  url: {{baseUrl}}/v1/sites/{{siteSlug}}/rsvp
+  body: json
+  auth: none
+}
+
+headers {
+  Origin: {{siteOrigin}}
+}
+
+body:json {
+  {
+    "version": 1,
+    "signedByGuestId": "{{carlaId}}",
+    "guests": [
+      {
+        "id": "{{carlaId}}",
+        "status": "confirmed"
+      }
+    ]
+  }
+}
+
+assert {
+  res.status: eq 400
+  res.body.errors[0].code: eq ANSWER_MISSING
+}
+
+docs {
+  RN06: todo convidado com nome precisa de Vou ou Não vou ("Falta a resposta de {nome}."); a vaga pode faltar.
+}

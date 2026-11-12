@@ -1,0 +1,32 @@
+meta {
+  name: Ligar a pergunta
+  type: http
+  seq: 1
+}
+
+put {
+  url: {{baseUrl}}/v1/weddings/{{weddingId}}/site/song-question
+  body: json
+  auth: none
+}
+
+headers {
+  Origin: {{appOrigin}}
+}
+
+body:json {
+  {
+    "enabled": true,
+    "text": null
+  }
+}
+
+assert {
+  res.status: eq 200
+  res.body.enabled: eq true
+  res.body.text: eq Que música não pode faltar na festa?
+}
+
+docs {
+  `PUT /v1/weddings/{id}/site/song-question` (RN01): o texto vazio vale o padrão.
+}
