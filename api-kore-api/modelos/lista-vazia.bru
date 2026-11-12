@@ -1,0 +1,23 @@
+meta {
+  name: Lista vazia
+  type: http
+  seq: 1
+  tags: [
+    local
+  ]
+}
+
+get {
+  url: {{baseUrl}}/v1/me/planner-templates
+  body: none
+  auth: none
+}
+
+assert {
+  res.status: eq 200
+  res.body.length: eq 0
+}
+
+docs {
+  `GET /v1/me/planner-templates`: numa conta nova, nenhum modelo.
+}

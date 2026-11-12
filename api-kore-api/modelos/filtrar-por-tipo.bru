@@ -1,0 +1,24 @@
+meta {
+  name: Filtrar por tipo
+  type: http
+  seq: 6
+  tags: [
+    local
+  ]
+}
+
+get {
+  url: {{baseUrl}}/v1/me/planner-templates?kind=faq
+  body: none
+  auth: none
+}
+
+assert {
+  res.status: eq 200
+  res.body.length: eq 1
+  res.body[0].kind: eq faq
+}
+
+docs {
+  O filtro `kind` (e `sectionType`), como o "Aplicar modelo" do Editor pede.
+}

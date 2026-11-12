@@ -1,0 +1,31 @@
+meta {
+  name: Meus casamentos
+  type: http
+  seq: 2
+  tags: [
+    local
+  ]
+}
+
+get {
+  url: {{baseUrl}}/v1/me/weddings
+  body: none
+  auth: none
+}
+
+assert {
+  res.status: eq 200
+  res.body.weddings: isArray
+  res.body.summary.active: isNumber
+}
+
+tests {
+  test("Fernanda e João na lista", () => {
+    const ids = res.body.weddings.map((wedding) => wedding.weddingId);
+    expect(ids).to.include(bru.getVar("plannerWeddingId"));
+  });
+}
+
+docs {
+  `GET /v1/me/weddings` (Meus casamentos RN01 a RN05): o resumo, os alertas e a lista inteira, sem o casamento de que ela é dona.
+}

@@ -1,0 +1,28 @@
+meta {
+  name: Excluir o casamento
+  type: http
+  seq: 7
+  tags: [
+    local
+  ]
+}
+
+delete {
+  url: {{baseUrl}}/v1/weddings/{{deleteWeddingId}}
+  body: none
+  auth: none
+}
+
+headers {
+  Origin: {{appOrigin}}
+}
+
+assert {
+  res.status: eq 204
+}
+
+docs {
+  `DELETE /v1/weddings/{weddingId}` (Meus casamentos RN11): quem criou exclui, sem dono e antes da publicação; os dados saem e fica a lápide.
+  
+  Erros: `403 ACTION_NOT_ALLOWED`, `404`, `409 WEDDING_HAS_OWNER`.
+}

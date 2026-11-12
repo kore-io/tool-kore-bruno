@@ -1,0 +1,22 @@
+meta {
+  name: Casamento que não é dela
+  type: http
+  seq: 5
+  tags: [
+    local
+  ]
+}
+
+get {
+  url: {{baseUrl}}/v1/me/weddings/0195b2e4-0000-7000-8000-000000000000
+  body: none
+  auth: none
+}
+
+assert {
+  res.status: eq 404
+}
+
+docs {
+  Um id que não está na lista dela: `404`, sem dizer se o casamento existe.
+}

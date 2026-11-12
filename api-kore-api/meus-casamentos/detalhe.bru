@@ -1,0 +1,26 @@
+meta {
+  name: Detalhe do casamento
+  type: http
+  seq: 3
+  tags: [
+    local
+  ]
+}
+
+get {
+  url: {{baseUrl}}/v1/me/weddings/{{plannerWeddingId}}
+  body: none
+  auth: none
+}
+
+assert {
+  res.status: eq 200
+  res.body.createdByMe: eq true
+  res.body.origin: eq created_by_me
+  res.body.hasOwner: eq false
+  res.body.partnerNames[0]: eq Fernanda
+}
+
+docs {
+  `GET /v1/me/weddings/{id}`: o detalhe, com a origem, os números e os convites do casal.
+}

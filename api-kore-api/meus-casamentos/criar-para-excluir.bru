@@ -1,0 +1,45 @@
+meta {
+  name: Criar um casamento para excluir
+  type: http
+  seq: 6
+  tags: [
+    local
+  ]
+}
+
+post {
+  url: {{baseUrl}}/v1/me/weddings
+  body: json
+  auth: none
+}
+
+headers {
+  Origin: {{appOrigin}}
+}
+
+body:json {
+  {
+    "partner1Name": "Gabriela",
+    "partner2Name": "Rafael",
+    "eventDate": "2027-03-20",
+    "city": "Campinas",
+    "state": "SP",
+    "slug": "{{deleteSlug}}"
+  }
+}
+
+script:pre-request {
+  bru.setVar("deleteSlug", `gabriela-${Date.now().toString(36)}`);
+}
+
+script:post-response {
+  if (res.status === 201) bru.setVar("deleteWeddingId", res.body.weddingId);
+}
+
+assert {
+  res.status: eq 201
+}
+
+docs {
+  Um segundo casamento, só para a exclusão a seguir.
+}

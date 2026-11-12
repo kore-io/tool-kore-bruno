@@ -1,0 +1,40 @@
+meta {
+  name: Respostas na hora
+  type: http
+  seq: 6
+  tags: [
+    local
+  ]
+}
+
+put {
+  url: {{baseUrl}}/v1/me/notification-preferences
+  body: json
+  auth: none
+}
+
+headers {
+  Origin: {{appOrigin}}
+}
+
+script:pre-request {
+  // O campo do corpo se chama "email", mas é a frequência (Na hora), não um endereço.
+  bru.setVar("emailFrequency", "immediate");
+}
+
+body:json {
+  {
+    "type": "rsvp",
+    "email": "{{emailFrequency}}"
+  }
+}
+
+assert {
+  res.status: eq 200
+  res.body.type: eq rsvp
+  res.body.email: eq immediate
+}
+
+docs {
+  `PUT /v1/me/notification-preferences` sem `weddingId`: grava a geral. O e-mail "Na hora" da cerimonialista não leva nome de grupo nem de convidado (RN07).
+}

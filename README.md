@@ -36,8 +36,8 @@ bru run --env Local --env-var loginEmail=voce+$(date +%s)@kore.local --exclude-t
 bru run --env "Homologação" --env-var loginEmail=… --env-var loginCode=… --exclude-tags=manual,local --delay 700
 ```
 
-A rodada completa faz 154 pedidos, acima do limite geral de 100 por minuto por IP: o
-`--delay 700` (milissegundos entre os pedidos) a deixa em cerca de 2 minutos, abaixo do
+A rodada completa faz 189 pedidos, acima do limite geral de 100 por minuto por IP: o
+`--delay 700` (milissegundos entre os pedidos) a deixa em cerca de 2 minutos e meio, abaixo do
 limite. Sem o `--delay`, o fim da rodada recebe `429 RATE_LIMITED`. Os convidados criados têm
 e-mail `@exemplo.kore.local` (decisão 181).
 
@@ -47,7 +47,10 @@ desenvolvimento do Google e o Sair logo antes dele: fora do Local, sem o Google,
 do código segue até o fim; a métrica do simulador, que só existe com `SIMULATOR_ENABLED`,
 ligada só no Local até o PO liberar; e a publicação por Cortesia, com o que depende do site
 publicado (envios, QR, Confirmar presença e músicas), porque `COURTESY_PUBLICATION_ENABLED`
-só pode ser ligada no Local).
+só pode ser ligada no Local; e o cadastro de cerimonialista, com tudo o que depende do
+perfil dela (Link de indicação, Meus casamentos, Modelos, as Notificações da cerimonialista e
+a assinatura no casamento que ela criou), porque `PLANNER_SIGNUP_ENABLED` também só pode ser
+ligada no Local).
 
 A ordem da rodada: Saúde → Entrar e sair → Indicação → Cadastro do casamento (cria o
 casamento de `loginEmail`) → Convites de acesso (convida, reenvia e cancela o convite do
@@ -66,7 +69,14 @@ marca o envio e baixa o QR) → Confirmar presença (abre o link do grupo, a pr�
 grava e tira o cookie da prévia do jar, responde pelo grupo e a versão velha) → Respostas
 pelo casal (o Painel com a versão e o histórico, alterar a resposta e a fila do lembrete) →
 Músicas (a lista e o Excel para o DJ) → Dashboard → Notificações (o sino, a central, ler
-todas, as preferências e o push deste aparelho) → Conta →
+todas, as preferências e o push deste aparelho) → **Fase 6, com a dona que vira também
+cerimonialista:** Cadastro da cerimonialista (o perfil da Prado Assessoria, o nome com site
+recusado e a troca de perfil) → Link de indicação → Meus casamentos (cria Fernanda e João, lê
+a lista e o detalhe, convida o casal, cria e exclui outro casamento) → Modelos (texto e FAQ,
+renomear, filtrar e excluir) → Notificações da cerimonialista (a central e o sino com
+`scope=planner`, ler todas e a preferência geral) → Assinatura (o Editor de Fernanda e João
+com a Prado Assessoria, que ela não muda; a dona volta ao perfil de casal e esconde a
+assinatura do seu site) → Conta →
 Aceite pelo parceiro (entra com o e-mail convidado, aceita, vira dono e sai). O endereço do site e os
 e-mails do parceiro são gerados a cada rodada. Os tokens dos convites e o código do
 parceiro vêm do Mailpit, então essas chamadas têm a tag `local`.

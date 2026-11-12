@@ -1,0 +1,25 @@
+meta {
+  name: Assinatura no Editor
+  type: http
+  seq: 1
+  tags: [
+    local
+  ]
+}
+
+get {
+  url: {{baseUrl}}/v1/weddings/{{plannerWeddingId}}/site
+  body: none
+  auth: none
+}
+
+assert {
+  res.status: eq 200
+  res.body.plannerCredit.name: eq Prado Assessoria
+  res.body.plannerCredit.showPlannerCredit: eq true
+  res.body.plannerCredit.canChange: eq false
+}
+
+docs {
+  `GET /v1/weddings/{weddingId}/site` (Assinatura RN03 e RN05): no casamento em que colabora, a assinatura com o Nome da assessoria; ela não muda o Switch.
+}

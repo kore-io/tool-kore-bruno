@@ -1,0 +1,33 @@
+meta {
+  name: Renomear
+  type: http
+  seq: 5
+  tags: [
+    local
+  ]
+}
+
+patch {
+  url: {{baseUrl}}/v1/me/planner-templates/{{templateId}}
+  body: json
+  auth: none
+}
+
+headers {
+  Origin: {{appOrigin}}
+}
+
+body:json {
+  {
+    "name": "Nossa história de sempre"
+  }
+}
+
+assert {
+  res.status: eq 200
+  res.body.name: eq Nossa história de sempre
+}
+
+docs {
+  `PATCH /v1/me/planner-templates/{id}`: o nome ou o conteúdo.
+}

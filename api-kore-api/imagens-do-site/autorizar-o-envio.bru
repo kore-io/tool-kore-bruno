@@ -36,8 +36,9 @@ assert {
 }
 
 tests {
-  test("o PUT é do original, no bucket privado, por 5 minutos (RN04 e RN06)", () => {
-    expect(res.body.uploadUrl).to.contain(`/site/${res.body.imageId}/original`);
+  test("o PUT é do original, no bucket privado, por 5 minutos, sem o id na chave (RN04, RN06 e decisão 229(f))", () => {
+    expect(res.body.uploadUrl).to.match(/\/site\/[0-9a-f]{32}\/original/);
+    expect(res.body.uploadUrl).to.not.contain(res.body.imageId);
     const minutes = (new Date(res.body.expiresAt) - Date.now()) / 60000;
     expect(minutes).to.be.within(4, 5.1);
   });

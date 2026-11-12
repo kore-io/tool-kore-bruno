@@ -1,0 +1,42 @@
+meta {
+  name: Salvar um FAQ
+  type: http
+  seq: 3
+  tags: [
+    local
+  ]
+}
+
+post {
+  url: {{baseUrl}}/v1/me/planner-templates
+  body: json
+  auth: none
+}
+
+headers {
+  Origin: {{appOrigin}}
+}
+
+body:json {
+  {
+    "kind": "faq",
+    "name": "Perguntas de sempre",
+    "content": {
+      "questions": [
+        {
+          "question": "Pode levar criança?",
+          "answer": "Pode."
+        }
+      ]
+    }
+  }
+}
+
+assert {
+  res.status: eq 201
+  res.body.kind: eq faq
+}
+
+docs {
+  O FAQ, com as perguntas e respostas.
+}

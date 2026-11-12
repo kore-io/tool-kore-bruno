@@ -1,0 +1,27 @@
+meta {
+  name: Perfil
+  type: http
+  seq: 6
+  tags: [
+    local
+  ]
+}
+
+get {
+  url: {{baseUrl}}/v1/me/planner
+  body: none
+  auth: none
+}
+
+assert {
+  res.status: eq 200
+  res.body.creditName: eq Prado Assessoria
+  res.body.cities.length: eq 2
+  res.body.creditHidden: eq false
+  res.body.termsAccepted: eq true
+  res.body.profileComplete: eq true
+}
+
+docs {
+  `GET /v1/me/planner` (RN09): o perfil, com o e-mail da conta e se a assinatura foi ocultada pelo Kore.
+}

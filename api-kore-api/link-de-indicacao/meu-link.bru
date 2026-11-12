@@ -1,0 +1,30 @@
+meta {
+  name: Meu link
+  type: http
+  seq: 1
+  tags: [
+    local
+  ]
+}
+
+get {
+  url: {{baseUrl}}/v1/me/referrer
+  body: none
+  auth: none
+}
+
+assert {
+  res.status: eq 200
+  res.body.referralCode: isString
+  res.body.discountPercent: isNumber
+}
+
+tests {
+  test("o link leva o código", () => {
+    expect(res.body.link).to.contain(res.body.referralCode);
+  });
+}
+
+docs {
+  `GET /v1/me/referrer`: o código, o link (`REFERRAL_LINK_URL`) e o desconto do casal.
+}

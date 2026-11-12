@@ -1,0 +1,50 @@
+meta {
+  name: Novo casamento
+  type: http
+  seq: 1
+  tags: [
+    local
+  ]
+}
+
+post {
+  url: {{baseUrl}}/v1/me/weddings
+  body: json
+  auth: none
+}
+
+headers {
+  Origin: {{appOrigin}}
+}
+
+body:json {
+  {
+    "partner1Name": "Fernanda Alves",
+    "partner2Name": "João Lima",
+    "eventDate": "2027-03-20",
+    "city": "Campinas",
+    "state": "SP",
+    "slug": "{{plannerSlug}}"
+  }
+}
+
+script:pre-request {
+  bru.setVar("plannerSlug", `fernanda-${Date.now().toString(36)}`);
+}
+
+script:post-response {
+  if (res.status === 201) bru.setVar("plannerWeddingId", res.body.weddingId);
+}
+
+assert {
+  res.status: eq 201
+  res.body.status: eq draft
+  res.body.slug: eq {{plannerSlug}}
+  res.body.timezone: eq America/Sao_Paulo
+}
+
+docs {
+  `POST /v1/me/weddings` (Novo casamento RN01 a RN05): a cerimonialista cria o casamento em rascunho, sem dono, e colabora nele. O fuso vem da UF.
+  
+  Erros: `400` (campo), `409 SLUG_UNAVAILABLE`, `422` (o contraste da Aparência).
+}

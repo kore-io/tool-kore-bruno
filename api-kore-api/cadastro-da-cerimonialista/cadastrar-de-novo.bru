@@ -1,0 +1,40 @@
+meta {
+  name: Cadastrar de novo
+  type: http
+  seq: 4
+  tags: [
+    local
+  ]
+}
+
+post {
+  url: {{baseUrl}}/v1/me/planner
+  body: json
+  auth: none
+}
+
+headers {
+  Origin: {{appOrigin}}
+}
+
+body:json {
+  {
+    "creditName": "Prado Assessoria",
+    "phone": "(19) 3333-4444",
+    "whatsapp": "(19) 99999-8888",
+    "cities": [
+      "Campinas (SP)",
+      "Valinhos (SP)"
+    ],
+    "termsVersion": "2026-09"
+  }
+}
+
+assert {
+  res.status: eq 409
+  res.body.error: eq PLANNER_PROFILE_EXISTS
+}
+
+docs {
+  Uma pessoa tem um perfil de cerimonialista só: o segundo cadastro dá `409`.
+}
