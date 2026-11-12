@@ -1,0 +1,23 @@
+meta {
+  name: Enviar ao armazenamento
+  type: http
+  seq: 2
+}
+
+put {
+  url: {{uploadUrl}}
+  body: file
+  auth: none
+}
+
+body:file {
+  file: @file(arquivos/foto-do-ensaio.jpg) @contentType(image/jpeg)
+}
+
+assert {
+  res.status: eq 200
+}
+
+docs {
+  O aparelho envia o arquivo direto ao armazenamento (MinIO no Local, R2 em homologação e produção), sem passar pela API (ADR do upload direto). O `Content-Type` e o tamanho precisam ser os da autorização.
+}

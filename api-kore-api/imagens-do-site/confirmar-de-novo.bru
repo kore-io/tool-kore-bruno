@@ -1,0 +1,31 @@
+meta {
+  name: Confirmar de novo
+  type: http
+  seq: 4
+}
+
+post {
+  url: {{baseUrl}}/v1/weddings/{{weddingId}}/site-images
+  body: json
+  auth: none
+}
+
+headers {
+  Origin: {{appOrigin}}
+}
+
+body:json {
+  {
+    "imageId": "{{imageId}}"
+  }
+}
+
+assert {
+  res.status: eq 200
+  res.body.id: eq {{imageId}}
+  res.body.status: eq ready
+}
+
+docs {
+  RN05: a confirmação é idempotente. Repetida (a resposta se perdeu), devolve a mesma imagem pronta com `200`, sem processar de novo.
+}

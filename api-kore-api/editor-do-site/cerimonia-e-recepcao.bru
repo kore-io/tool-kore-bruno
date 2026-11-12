@@ -1,0 +1,44 @@
+meta {
+  name: Cerimônia e Recepção
+  type: http
+  seq: 7
+}
+
+put {
+  url: {{baseUrl}}/v1/weddings/{{weddingId}}/site/sections/ceremony
+  body: json
+  auth: none
+}
+
+headers {
+  Origin: {{appOrigin}}
+}
+
+body:json {
+  {
+    "enabled": true,
+    "title": "Cerimônia & Recepção",
+    "content": {
+      "venues": [
+        {
+          "title": "Cerimônia",
+          "placeName": "Capela Nossa Senhora das Graças",
+          "date": "2026-11-14",
+          "time": "16:30",
+          "address": "Rua Barão de Jaguara, 1200, Centro, Campinas, SP"
+        }
+      ]
+    }
+  }
+}
+
+assert {
+  res.status: eq 200
+  res.body.type: eq ceremony
+  res.body.empty: eq false
+  res.body.content.venues.length: eq 1
+}
+
+docs {
+  `PUT /v1/weddings/{weddingId}/site/sections/{type}` (Seções RN07, RN12 e RN13): a seção inteira, com o conteúdo validado pelo DTO do tipo. No site, só o grupo identificado vê os locais.
+}

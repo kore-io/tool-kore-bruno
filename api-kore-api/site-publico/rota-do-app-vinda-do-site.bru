@@ -1,0 +1,29 @@
+meta {
+  name: Rota do app vinda do site
+  type: http
+  seq: 6
+}
+
+get {
+  url: {{baseUrl}}/v1/me
+  body: none
+  auth: none
+}
+
+headers {
+  Origin: {{siteOrigin}}
+}
+
+assert {
+  res.status: eq 401
+}
+
+tests {
+  test("sem CORS para o site numa rota do app (RN07)", () => {
+    expect(res.headers["access-control-allow-origin"]).to.equal(undefined);
+  });
+}
+
+docs {
+  Site público RN07 e RN08: a origem do site só vale nas rotas do site. Numa rota do app, ela não recebe CORS e a sessão do casal é ignorada, mesmo com o cookie indo junto.
+}

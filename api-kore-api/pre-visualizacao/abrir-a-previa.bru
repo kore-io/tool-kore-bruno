@@ -1,0 +1,41 @@
+meta {
+  name: Abrir a prévia
+  type: http
+  seq: 2
+}
+
+post {
+  url: {{baseUrl}}/v1/sites/{{siteSlug}}/preview-session
+  body: json
+  auth: none
+}
+
+headers {
+  Origin: {{siteOrigin}}
+}
+
+body:json {
+  {
+    "token": "{{previewToken}}"
+  }
+}
+
+assert {
+  res.status: eq 200
+  res.body.mode: eq party
+  res.body.party.id: eq {{partyId}}
+  res.headers["cache-control"]: eq "private, no-store"
+}
+
+tests {
+  test("o cookie da prévia, só nas rotas do site (RN03)", () => {
+    const cookie = [].concat(res.headers["set-cookie"] || []).join(";");
+    expect(cookie).to.match(/kore_site_preview_[0-9a-f-]+=/);
+    expect(cookie).to.contain("Path=/v1/sites");
+    expect(cookie).to.contain("HttpOnly");
+  });
+}
+
+docs {
+  `POST /v1/sites/{slug}/preview-session` (RN03): troca o token pelo cookie `kore_site_preview_<weddingId>` (30 minutos fixos, separado do cookie do grupo), marcando o token como usado.
+}

@@ -1,0 +1,41 @@
+meta {
+  name: Editor do site
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{baseUrl}}/v1/weddings/{{weddingId}}/site
+  body: none
+  auth: none
+}
+
+script:post-response {
+  if (res.status === 200) bru.setVar("siteSlug", res.body.slug);
+}
+
+assert {
+  res.status: eq 200
+  res.body.status: eq draft
+  res.body.publishedAt: isNull
+  res.body.sections.length: eq 6
+  res.body.editable.slug: eq true
+  res.body.appearance.fontPairKey: isString
+}
+
+tests {
+  test("as 6 seções da F2, na ordem fixa (Seções RN01 e RN02)", () => {
+    expect(res.body.sections.map((section) => section.type)).to.eql([
+      "story",
+      "countdown",
+      "ceremony",
+      "lodging",
+      "dress_code",
+      "faq",
+    ]);
+  });
+}
+
+docs {
+  `GET /v1/weddings/{weddingId}/site` (Dados básicos RN11): tudo o que o Editor mostra, numa chamada, com o `editable` (a data, a UF e o endereço só para o dono ou o vendedor antes do aceite; o endereço só em rascunho). As imagens saem só prontas, com o endereço do CDN.
+}

@@ -1,0 +1,50 @@
+meta {
+  name: Autorizar o envio
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{baseUrl}}/v1/weddings/{{weddingId}}/site-images/upload-authorizations
+  body: json
+  auth: none
+}
+
+headers {
+  Origin: {{appOrigin}}
+}
+
+body:json {
+  {
+    "contentType": "image/jpeg",
+    "sizeBytes": 15324
+  }
+}
+
+script:post-response {
+  if (res.status === 201) {
+    bru.setVar("imageId", res.body.imageId);
+    bru.setVar("uploadUrl", res.body.uploadUrl);
+  }
+}
+
+assert {
+  res.status: eq 201
+  res.body.method: eq PUT
+  res.body.headers["Content-Type"]: eq image/jpeg
+  res.body.headers["Content-Length"]: eq "15324"
+}
+
+tests {
+  test("o PUT é do original, no bucket privado, por 5 minutos (RN04 e RN06)", () => {
+    expect(res.body.uploadUrl).to.contain(`/site/${res.body.imageId}/original`);
+    const minutes = (new Date(res.body.expiresAt) - Date.now()) / 60000;
+    expect(minutes).to.be.within(4, 5.1);
+  });
+}
+
+docs {
+  `POST /v1/weddings/{weddingId}/site-images/upload-authorizations` (RN04 e RN07): cria a imagem em `uploading` e devolve a URL pré-assinada de PUT, presa à chave, ao tipo e ao tamanho (`sizeBytes` é o tamanho exato de `arquivos/foto-do-ensaio.jpg`).
+
+  Erros: `400` (tipo fora de `image/jpeg` ou tamanho fora de 1 B a 4 MB), `409 SITE_IMAGE_LIMIT` (40 guardadas), `429 RATE_LIMITED` (`site_image`, 30 por minuto por usuário).
+}

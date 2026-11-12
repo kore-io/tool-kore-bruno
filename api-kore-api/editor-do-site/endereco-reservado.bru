@@ -1,0 +1,32 @@
+meta {
+  name: Endereço reservado
+  type: http
+  seq: 3
+}
+
+patch {
+  url: {{baseUrl}}/v1/weddings/{{weddingId}}/site
+  body: json
+  auth: none
+}
+
+headers {
+  Origin: {{appOrigin}}
+}
+
+body:json {
+  {
+    "slug": "Simule"
+  }
+}
+
+assert {
+  res.status: eq 409
+  res.body.error: eq SLUG_UNAVAILABLE
+  res.body.reason: eq reserved
+  res.body.suggestion: isString
+}
+
+docs {
+  Dados básicos RN06 e RN07: o endereço vai para minúsculas antes de validar, e a lista de reservados não diferencia maiúsculas ("Simule" é a rota do simulador).
+}

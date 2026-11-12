@@ -1,0 +1,34 @@
+meta {
+  name: Site na prévia como visitante
+  type: http
+  seq: 5
+}
+
+get {
+  url: {{baseUrl}}/v1/sites/{{siteSlug}}
+  body: none
+  auth: none
+}
+
+headers {
+  Origin: {{siteOrigin}}
+}
+
+assert {
+  res.status: eq 200
+  res.body.viewer.preview.as: eq visitor
+  res.body.contact: isNull
+}
+
+tests {
+  test("o visitante vê a Cerimônia fechada, sem o endereço (RN05 do Site público)", () => {
+    const ceremony = res.body.sections.find((section) => section.type === "ceremony");
+    expect(ceremony.locked).to.equal(true);
+    expect(ceremony.content).to.equal(undefined);
+    expect(JSON.stringify(res.body)).to.not.contain("Barão de Jaguara");
+  });
+}
+
+docs {
+  RN05 do Site público: a resposta ao visitante não leva local, horário nem contato; o recorte é do servidor.
+}

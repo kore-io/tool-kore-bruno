@@ -1,0 +1,39 @@
+meta {
+  name: Site na prévia como grupo
+  type: http
+  seq: 3
+}
+
+get {
+  url: {{baseUrl}}/v1/sites/{{siteSlug}}
+  body: none
+  auth: none
+}
+
+headers {
+  Origin: {{siteOrigin}}
+}
+
+assert {
+  res.status: eq 200
+  res.body.viewer.kind: eq preview
+  res.body.viewer.preview.as: eq party
+  res.body.contact.whatsapp: eq "+5519998764521"
+}
+
+tests {
+  test("o grupo vê os locais da Cerimônia (RN05 do Site público)", () => {
+    const ceremony = res.body.sections.find((section) => section.type === "ceremony");
+    expect(ceremony.locked).to.equal(false);
+    expect(ceremony.content.venues[0].placeName).to.equal("Capela Nossa Senhora das Graças");
+  });
+  test("a contagem fica no topo, e Nossa história traz a foto pronta", () => {
+    expect(res.body.sections[0].type).to.equal("countdown");
+    const story = res.body.sections.find((section) => section.type === "story");
+    expect(story.content.images.length).to.equal(1);
+  });
+}
+
+docs {
+  RN05: com o cookie da prévia, o rascunho aparece, com o recorte do modo escolhido. A leitura vai pela transação com a pessoa do cookie, e a RLS confere o vínculo de novo.
+}

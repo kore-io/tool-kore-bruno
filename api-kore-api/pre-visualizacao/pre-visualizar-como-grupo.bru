@@ -1,0 +1,41 @@
+meta {
+  name: Pré-visualizar como grupo
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{baseUrl}}/v1/weddings/{{weddingId}}/site-previews
+  body: json
+  auth: none
+}
+
+headers {
+  Origin: {{appOrigin}}
+}
+
+body:json {
+  {
+    "mode": "party",
+    "partyId": "{{partyId}}"
+  }
+}
+
+script:post-response {
+  if (res.status === 201) {
+    const token = res.body.url.match(/[?&]previa=([^&]+)/);
+    if (token) bru.setVar("previewToken", decodeURIComponent(token[1]));
+  }
+}
+
+assert {
+  res.status: eq 201
+  res.body.url: contains ?previa=
+  res.headers["cache-control"]: eq no-store
+}
+
+docs {
+  `POST /v1/weddings/{weddingId}/site-previews` (RN01 e RN02; rota do app): o token de 128 bits, de uso único, por 5 minutos, guardado só em hash. O app abre a `url` numa aba aberta no clique.
+
+  Erros: `400` (modo, ou grupo ausente no modo `party`), `404 PARTY_NOT_FOUND`, `409 SITE_SLUG_MISSING`.
+}
