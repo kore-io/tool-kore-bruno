@@ -1,0 +1,53 @@
+meta {
+  name: Pagar a publicação (cartão de teste)
+  type: http
+  seq: 3
+  tags: [
+    local
+  ]
+}
+
+post {
+  url: {{baseUrl}}/v1/weddings/{{weddingId}}/payments
+  body: json
+  auth: none
+}
+
+headers {
+  Origin: {{appOrigin}}
+  Idempotency-Key: {{$randomUUID}}
+}
+
+body:json {
+  {
+    "kind": "publication",
+    "endDate": "2027-08-15",
+    "method": "card",
+    "installments": 1,
+    "payer": { "name": "Ana Beatriz Moreira", "taxId": "529.982.247-25" },
+    "cardToken": "tok_local_4242",
+    "priceVersion": "{{publicationPriceVersion}}",
+    "expectedTotalCents": 0
+  }
+}
+
+script:pre-request {
+  // A Idempotency-Key é um UUID aleatório novo por rodada: a mesma chave com outro
+  // corpo daria 422 (Publicar e pagar RN14). O sandbox do CLI não tem o crypto.
+  // O total da cotação entra como número (o corpo leva 0 no lugar dele).
+  req.setBody({ ...req.getBody(), expectedTotalCents: Number(bru.getVar("publicationTotalCents")) });
+}
+
+script:post-response {
+  // A confirmação pela rota dev (o próximo pedido) usa o id do pagamento.
+  if (res.status === 201) bru.setVar("publicationPaymentId", res.body.paymentId);
+}
+
+assert {
+  res.status: eq 201
+  res.body.paymentId: isString
+}
+
+docs {
+  `POST /v1/weddings/{id}/payments` (Publicar e pagar RN06 a RN09): só a dona; paga a publicação no cartão de teste do gateway local (`tok_local_4242`), com o CPF de exemplo de quem paga. O site só publica quando o gateway confirma (o próximo pedido).
+}

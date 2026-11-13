@@ -45,9 +45,9 @@ Tags: `manual` (o botão do e-mail, que vale no lugar do código, e a indicaçã
 indicador de verdade, com `--env-var referralCode=…`) e `local` (o provedor de
 desenvolvimento do Google e o Sair logo antes dele: fora do Local, sem o Google, a sessão
 do código segue até o fim; a métrica do simulador, que só existe com `SIMULATOR_ENABLED`,
-ligada só no Local até o PO liberar; e a publicação por Cortesia, com o que depende do site
-publicado (envios, QR, Confirmar presença e músicas), porque `COURTESY_PUBLICATION_ENABLED`
-só pode ser ligada no Local; e o cadastro de cerimonialista, com tudo o que depende do
+ligada só no Local até o PO liberar; o que depende do site publicado (envios, QR, Confirmar
+presença e músicas), porque a publicação por Cortesia saiu na F3 (decisão 246) e a paga só se
+confirma pela rota dev do gateway local; e o cadastro de cerimonialista, com tudo o que depende do
 perfil dela (Link de indicação, Meus casamentos, Modelos, as Notificações da cerimonialista e
 a assinatura no casamento que ela criou), porque `PLANNER_SIGNUP_ENABLED` também só pode ser
 ligada no Local).
@@ -62,8 +62,9 @@ lista e a planilha de `arquivos/convidados-modelo.xlsx`) → Exportação (Excel
 armazenamento a `arquivos/foto-do-ensaio.jpg` e confirma) → Editor do site (Dados básicos,
 endereço, Aparência e seções) → Site público (o rascunho, que responde `SITE_DRAFT`, a prévia
 do link e o link do grupo) → Pré-visualização (o rascunho como grupo e como visitante, pela
-prévia) → Simule o site → **Fases 4 e 5:** Publicação por Cortesia (os limites da data de
-saída do ar e a publicação) → Prazo de resposta → Mensagens prontas (edita e restaura o
+prévia) → Simule o site → **Fases 4 e 5:** Publicação (os limites da data de saída do ar, a
+cotação, o pagamento no cartão de teste e a confirmação pela rota dev do gateway local) →
+Prazo de resposta → Mensagens prontas (edita e restaura o
 convite) → Pergunta de música → Envios (cria a Família Duarte, lê a fila com a URL do WhatsApp,
 marca o envio e baixa o QR) → Confirmar presença (abre o link do grupo, a prévia que não
 grava e tira o cookie da prévia do jar, responde pelo grupo e a versão velha) → Respostas

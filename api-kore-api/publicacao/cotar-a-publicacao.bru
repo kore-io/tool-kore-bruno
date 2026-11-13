@@ -1,0 +1,39 @@
+meta {
+  name: Cotar a publicação
+  type: http
+  seq: 2
+  tags: [
+    local
+  ]
+}
+
+get {
+  url: {{baseUrl}}/v1/weddings/{{weddingId}}/billing/quote?kind=publication&endDate=2027-08-15&method=card&installments=1
+  body: none
+  auth: none
+}
+
+params:query {
+  kind: publication
+  endDate: 2027-08-15
+  method: card
+  installments: 1
+}
+
+assert {
+  res.status: eq 200
+  res.body.totalCents: isNumber
+  res.body.priceVersion: isString
+}
+
+script:post-response {
+  // O pagamento confere a cotação: guarda o total e a versão da tabela para o próximo pedido.
+  if (res.status === 200) {
+    bru.setVar("publicationTotalCents", res.body.totalCents);
+    bru.setVar("publicationPriceVersion", res.body.priceVersion);
+  }
+}
+
+docs {
+  `GET /v1/weddings/{id}/billing/quote` (Publicar e pagar RN03 a RN05): a cotação da publicação até 15/08/2027 no cartão à vista. Fica só no Local porque o pagamento seguinte usa o gateway local, confirmado pela rota dev.
+}

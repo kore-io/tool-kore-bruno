@@ -1,0 +1,30 @@
+meta {
+  name: Confirmar o pagamento (rota dev)
+  type: http
+  seq: 4
+  tags: [
+    local
+  ]
+}
+
+post {
+  url: {{baseUrl}}/v1/dev/payments/{{publicationPaymentId}}/confirm
+  body: json
+  auth: none
+}
+
+headers {
+  Origin: {{appOrigin}}
+}
+
+body:json {
+  {}
+}
+
+assert {
+  res.status: eq 200
+}
+
+docs {
+  `POST /v1/dev/payments/{paymentId}/confirm` (Publicar e pagar RN15): a rota dev do gateway local, que só existe em local e test, simula a confirmação do cartão e processa em linha (RN21). O pagamento é aplicado e o site é publicado até 15/08/2027.
+}

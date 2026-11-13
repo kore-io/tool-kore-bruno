@@ -14,9 +14,8 @@ assert {
   res.status: eq 200
   res.body.publication.endDateMin: eq 2027-05-16
   res.body.publication.endDateMax: eq 2028-05-15
-  res.body.publication.courtesyEnabled: isBoolean
 }
 
 docs {
-  `GET /v1/weddings/{id}/site` ganha `publication: { courtesyEnabled, endDateMin, endDateMax }` (RN01; decisão 217(13)): os limites da data de saída do ar, do dia seguinte ao casamento (15/05/2027) até 12 meses depois, calculados no servidor no fuso do casamento.
+  `GET /v1/weddings/{id}/site` traz `publication: { endDateMin, endDateMax }` (Publicar e pagar; decisão 217(13)): os limites da data de saída do ar, do dia seguinte ao casamento (15/05/2027) até 12 meses depois, calculados no servidor no fuso do casamento. O `courtesyEnabled` saiu com a Cortesia (Publicar e pagar RN17; decisão 246).
 }
