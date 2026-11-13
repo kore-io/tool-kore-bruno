@@ -15,7 +15,7 @@ post {
 
 headers {
   Origin: {{appOrigin}}
-  Idempotency-Key: {{publicationIdempotencyKey}}
+  Idempotency-Key: {{$randomUUID}}
 }
 
 body:json {
@@ -32,8 +32,8 @@ body:json {
 }
 
 script:pre-request {
-  // Uma chave nova por rodada: a mesma chave com outro corpo daria 422 (Publicar e pagar RN14).
-  bru.setVar("publicationIdempotencyKey", require("crypto").randomUUID());
+  // A Idempotency-Key é um UUID aleatório novo por rodada: a mesma chave com outro
+  // corpo daria 422 (Publicar e pagar RN14). O sandbox do CLI não tem o crypto.
   // O total da cotação entra como número (o corpo leva 0 no lugar dele).
   req.setBody({ ...req.getBody(), expectedTotalCents: Number(bru.getVar("publicationTotalCents")) });
 }
