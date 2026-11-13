@@ -1,8 +1,8 @@
 meta {
-  name: Publicação por Cortesia
+  name: Publicação
   seq: 18
 }
 
 docs {
-  Spec "Publicação por Cortesia" (F4): publica o site sem pagamento, atrás da chave `COURTESY_PUBLICATION_ENABLED`, que só pode ser ligada no Local (a API não sobe com ela em homologação e produção). Por isso, a publicação e o que depende dela (envios, QR, RSVP e músicas) têm a tag `local`.
+  Os limites da data de saída do ar no editor do site. A publicação por Cortesia saiu na F3 (Publicar e pagar RN17; decisão 246): a rota `POST …/publication` responde 404, e os pedidos que a chamavam saíram desta pasta. A publicação agora é paga (`POST …/payments` e, no Local, a confirmação pela rota dev do gateway); as pastas que precisam do site publicado (envios, QR, Confirmar presença e músicas) seguem com a tag `local`.
 }
