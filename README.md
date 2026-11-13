@@ -62,7 +62,8 @@ lista e a planilha de `arquivos/convidados-modelo.xlsx`) → Exportação (Excel
 armazenamento a `arquivos/foto-do-ensaio.jpg` e confirma) → Editor do site (Dados básicos,
 endereço, Aparência e seções) → Site público (o rascunho, que responde `SITE_DRAFT`, a prévia
 do link e o link do grupo) → Pré-visualização (o rascunho como grupo e como visitante, pela
-prévia) → Simule o site → **Fases 4 e 5:** Publicação (os limites da data de saída do ar) →
+prévia) → Simule o site → **Fases 4 e 5:** Publicação (os limites da data de saída do ar, a
+cotação, o pagamento no cartão de teste e a confirmação pela rota dev do gateway local) →
 Prazo de resposta → Mensagens prontas (edita e restaura o
 convite) → Pergunta de música → Envios (cria a Família Duarte, lê a fila com a URL do WhatsApp,
 marca o envio e baixa o QR) → Confirmar presença (abre o link do grupo, a prévia que não

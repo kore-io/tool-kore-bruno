@@ -1,0 +1,24 @@
+meta {
+  name: Site publicado
+  type: http
+  seq: 5
+  tags: [
+    local
+  ]
+}
+
+get {
+  url: {{baseUrl}}/v1/weddings/{{weddingId}}/site
+  body: none
+  auth: none
+}
+
+assert {
+  res.status: eq 200
+  res.body.status: eq published
+  res.body.publishedAt: isString
+}
+
+docs {
+  O site publicado pelo pagamento (Publicar e pagar RN05): é o que as pastas seguintes precisam (Envios, QR, Confirmar presença e Músicas).
+}
