@@ -1,0 +1,25 @@
+meta {
+  name: Visão geral
+  type: http
+  seq: 4
+  tags: [
+    manual
+    local
+  ]
+}
+
+get {
+  url: {{baseUrl}}/v1/admin/overview
+  body: none
+  auth: none
+}
+
+assert {
+  res.status: eq 200
+  res.body.weddingsCreated: isNumber
+  res.body.revenue: isDefined
+}
+
+docs {
+  `GET /v1/admin/overview` (RN04): os números do mês em Brasília; o Admin recebe a Receita e os repasses pedidos.
+}

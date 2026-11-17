@@ -1,0 +1,25 @@
+meta {
+  name: Resumo da indicadora
+  type: http
+  seq: 3
+  tags: [
+    local
+  ]
+}
+
+get {
+  url: {{baseUrl}}/v1/me/referrer
+  body: none
+  auth: none
+}
+
+assert {
+  res.status: eq 200
+  res.body.ratePercent: isNumber
+  res.body.balances.pendingCents: isNumber
+  res.body.payoutDataComplete: isBoolean
+}
+
+docs {
+  `GET /v1/me/referrer` (Contrato de API de Comissões): o link, o desconto, o percentual (a tela não mostra, decisão 230 D3), os saldos e os dados para receber mascarados.
+}

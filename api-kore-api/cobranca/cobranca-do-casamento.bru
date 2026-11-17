@@ -1,0 +1,33 @@
+meta {
+  name: Cobrança do casamento
+  type: http
+  seq: 1
+  tags: [
+    local
+  ]
+}
+
+get {
+  url: {{baseUrl}}/v1/weddings/{{weddingId}}/billing
+  body: none
+  auth: none
+}
+
+tests {
+  test("o pagamento aplicado traz o prazo de desistir", () => {
+    const [payment] = res.body.payments;
+    expect(payment.kind).to.equal("publication");
+    expect(payment.refundableUntil).to.be.a("string");
+  });
+}
+
+assert {
+  res.status: eq 200
+  res.body.status: eq published
+  res.body.publicationSource: eq payment
+  res.body.payments: isArray
+}
+
+docs {
+  `GET /v1/weddings/{weddingId}/billing` (Publicar e pagar, Contrato de API): o status e as datas para todo vínculo; o histórico dos pagamentos aplicados, o pendente e o pagador só para o dono. O `refundableUntil` de cada pagamento é o fim do 7º dia (Pagamentos e arrependimento RN02).
+}

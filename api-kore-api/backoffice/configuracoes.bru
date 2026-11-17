@@ -1,0 +1,24 @@
+meta {
+  name: Configurações
+  type: http
+  seq: 13
+  tags: [
+    manual
+    local
+  ]
+}
+
+get {
+  url: {{baseUrl}}/v1/admin/settings
+  body: none
+  auth: none
+}
+
+assert {
+  res.status: eq 200
+  res.body.referral: isDefined
+}
+
+docs {
+  `GET /v1/admin/settings` (Backoffice - cobrança RN10; decisão 267): os valores da indicação e as integrações. O `PUT` pede sessão recente e muda a regra para todos: fica fora da coleção.
+}

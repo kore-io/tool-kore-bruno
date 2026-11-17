@@ -1,0 +1,24 @@
+meta {
+  name: Pagamentos
+  type: http
+  seq: 10
+  tags: [
+    manual
+    local
+  ]
+}
+
+get {
+  url: {{baseUrl}}/v1/admin/payments?page=1
+  body: none
+  auth: none
+}
+
+assert {
+  res.status: eq 200
+  res.body.items: isArray
+}
+
+docs {
+  `GET /v1/admin/payments` (Backoffice - cobrança RN03): só o Admin; filtros de status, tipo, forma e período.
+}

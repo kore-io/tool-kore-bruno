@@ -1,0 +1,37 @@
+meta {
+  name: Google — início (staff)
+  type: http
+  seq: 1
+  tags: [
+    manual
+    local
+  ]
+}
+
+get {
+  url: {{baseUrl}}/v1/auth/google?origin=none
+  body: none
+  auth: none
+}
+
+params:query {
+  origin: none
+}
+
+script:post-response {
+  const state = /[?&]state=([^&]+)/.exec(res.getHeader("location") ?? "");
+  if (state) bru.setVar("googleState", decodeURIComponent(state[1]));
+}
+
+settings {
+  encodeUrl: true
+  followRedirects: false
+}
+
+assert {
+  res.status: eq 302
+}
+
+docs {
+  O Backoffice exige o login pelo Google com o domínio da empresa (Backoffice - acesso RN01). No Local, o provedor dev dá o `hd` a todo e-mail que não é de consumidor.
+}

@@ -1,0 +1,33 @@
+meta {
+  name: Google — volta (staff)
+  type: http
+  seq: 3
+  tags: [
+    manual
+    local
+  ]
+}
+
+get {
+  url: {{baseUrl}}/v1/auth/google/callback?code={{googleCode}}&state={{googleState}}
+  body: none
+  auth: none
+}
+
+params:query {
+  code: {{googleCode}}
+  state: {{googleState}}
+}
+
+settings {
+  encodeUrl: true
+  followRedirects: false
+}
+
+assert {
+  res.status: eq 302
+}
+
+docs {
+  Abre a sessão do staff, com o `hd` verificado. O papel (`platformRole`) é lido do banco a cada requisição.
+}

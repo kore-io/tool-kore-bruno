@@ -1,0 +1,31 @@
+meta {
+  name: Casamentos
+  type: http
+  seq: 6
+  tags: [
+    manual
+    local
+  ]
+}
+
+get {
+  url: {{baseUrl}}/v1/admin/weddings?page=1
+  body: none
+  auth: none
+}
+
+script:post-response {
+  // A pasta roda à parte (manual): o casamento lido no detalhe é o primeiro da lista.
+  const [first] = res.body.items ?? [];
+  if (first) bru.setVar("adminWeddingId", first.id);
+}
+
+assert {
+  res.status: eq 200
+  res.body.items: isArray
+  res.body.items[0].id: isString
+}
+
+docs {
+  `GET /v1/admin/weddings` (RN05): a lista com os filtros de status, RSVP e datas.
+}

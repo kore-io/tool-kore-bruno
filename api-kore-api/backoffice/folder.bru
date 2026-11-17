@@ -1,0 +1,13 @@
+meta {
+  name: Backoffice
+  seq: 38
+}
+
+docs {
+  Specs "Backoffice - acesso, casamentos e suporte" e "Backoffice - cobrança, indicadores e configurações" (F3): entra como staff pelo provedor dev do Google e lê a Visão geral, a busca, os casamentos, o log, os alertas, a Cobrança, os repasses, as cerimonialistas e as Configurações.
+
+  Tags `manual` e `local`. Antes de rodar:
+  1. Entre uma vez com o e-mail da equipe (`staffEmail`, `@kore.com.br`) pelo Google dev, para a conta existir, ou deixe a primeira chamada desta pasta criá-la.
+  2. Dê o papel, na API: `pnpm staff:role --email <staffEmail> --role admin --by <você> --reason "Bruno local"`.
+  3. Rode com `--env-var staffEmail=…`. Ao fim, a sessão da coleção é a do staff.
+}

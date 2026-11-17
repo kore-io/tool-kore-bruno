@@ -1,0 +1,25 @@
+meta {
+  name: Alertas
+  type: http
+  seq: 9
+  tags: [
+    manual
+    local
+  ]
+}
+
+get {
+  url: {{baseUrl}}/v1/admin/alerts?status=open
+  body: none
+  auth: none
+}
+
+assert {
+  res.status: eq 200
+  res.body.items: isArray
+  res.body.openCount: isNumber
+}
+
+docs {
+  `GET /v1/admin/alerts?status=open` (RN12): os de dinheiro só para o Admin.
+}

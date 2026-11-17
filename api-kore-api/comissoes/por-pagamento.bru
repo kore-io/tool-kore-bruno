@@ -1,0 +1,32 @@
+meta {
+  name: Por pagamento
+  type: http
+  seq: 1
+  tags: [
+    local
+  ]
+}
+
+get {
+  url: {{baseUrl}}/v1/me/referrer/commissions?view=payment&page=1
+  body: none
+  auth: none
+}
+
+params:query {
+  view: payment
+  page: 1
+}
+
+assert {
+  res.status: eq 200
+  res.body.view: eq payment
+  res.body.page: eq 1
+  res.body.pageSize: eq 50
+  res.body.items: isArray
+  res.body.balances.availableCents: isNumber
+}
+
+docs {
+  `GET /v1/me/referrer/commissions?view=payment&page=` (RN02 e RN07): os saldos e as linhas, a comissão (`kind: commission`, com `commissionId`, `coupleNames`, `blockReason`) e o ajuste (`kind: adjustment`, com o repasse em que entrou), o mais novo primeiro.
+}

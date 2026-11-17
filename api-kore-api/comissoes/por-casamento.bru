@@ -1,0 +1,28 @@
+meta {
+  name: Por casamento
+  type: http
+  seq: 2
+  tags: [
+    local
+  ]
+}
+
+get {
+  url: {{baseUrl}}/v1/me/referrer/commissions?view=wedding
+  body: none
+  auth: none
+}
+
+params:query {
+  view: wedding
+}
+
+assert {
+  res.status: eq 200
+  res.body.view: eq wedding
+  res.body.items: isArray
+}
+
+docs {
+  `GET /v1/me/referrer/commissions?view=wedding` (RN07): a soma por casal, com as datas de liberação ("Libera em 09/09").
+}

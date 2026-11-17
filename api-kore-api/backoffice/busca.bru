@@ -1,0 +1,25 @@
+meta {
+  name: Busca
+  type: http
+  seq: 5
+  tags: [
+    manual
+    local
+  ]
+}
+
+get {
+  url: {{baseUrl}}/v1/admin/search?q=ana
+  body: none
+  auth: none
+}
+
+assert {
+  res.status: eq 200
+  res.body.weddings: isArray
+  res.body.referrers: isArray
+}
+
+docs {
+  `GET /v1/admin/search?q=` (RN03): casal, endereço, e-mail e indicador; o termo vai ao log só em hash.
+}

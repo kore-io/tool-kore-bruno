@@ -1,0 +1,23 @@
+meta {
+  name: Chaves Pix
+  type: http
+  seq: 1
+  tags: [
+    local
+  ]
+}
+
+get {
+  url: {{baseUrl}}/v1/me/referrer/pix-keys
+  body: none
+  auth: none
+}
+
+assert {
+  res.status: eq 200
+  res.body.items: isArray
+}
+
+docs {
+  `GET /v1/me/referrer/pix-keys` (RN03 e RN09): a chave vigente, a troca em espera e o histórico, mascarados. Numa conta nova, vazio.
+}

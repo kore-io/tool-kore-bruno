@@ -1,0 +1,38 @@
+meta {
+  name: Google — provedor dev (staff)
+  type: http
+  seq: 2
+  tags: [
+    manual
+    local
+  ]
+}
+
+get {
+  url: {{baseUrl}}/v1/auth/google/dev?state={{googleState}}&email={{staffEmail}}
+  body: none
+  auth: none
+}
+
+params:query {
+  state: {{googleState}}
+  email: {{staffEmail}}
+}
+
+script:post-response {
+  const code = /[?&]code=([^&]+)/.exec(res.getHeader("location") ?? "");
+  if (code) bru.setVar("googleCode", decodeURIComponent(code[1]));
+}
+
+settings {
+  encodeUrl: true
+  followRedirects: false
+}
+
+assert {
+  res.status: eq 302
+}
+
+docs {
+  O provedor de desenvolvimento faz o papel do Google com o `staffEmail` (`@kore.com.br`).
+}

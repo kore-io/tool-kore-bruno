@@ -1,0 +1,28 @@
+meta {
+  name: Detalhe do casamento
+  type: http
+  seq: 7
+  tags: [
+    manual
+    local
+  ]
+}
+
+get {
+  url: {{baseUrl}}/v1/admin/weddings/{{adminWeddingId}}?tab=general
+  body: none
+  auth: none
+}
+
+params:query {
+  tab: general
+}
+
+assert {
+  res.status: eq 200
+  res.body.tab: eq general
+}
+
+docs {
+  `GET /v1/admin/weddings/{id}?tab=` (RN06): o primeiro casamento da lista (a pasta roda à parte, sem o `weddingId` da rodada principal); a aba `billing` é só do Admin.
+}

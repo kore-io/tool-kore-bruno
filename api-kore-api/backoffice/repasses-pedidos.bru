@@ -1,0 +1,24 @@
+meta {
+  name: Repasses pedidos
+  type: http
+  seq: 11
+  tags: [
+    manual
+    local
+  ]
+}
+
+get {
+  url: {{baseUrl}}/v1/admin/payouts?status=requested
+  body: none
+  auth: none
+}
+
+assert {
+  res.status: eq 200
+  res.body.items: isArray
+}
+
+docs {
+  `GET /v1/admin/payouts?status=requested|held|history` (Backoffice - cobrança RN09): só o Admin.
+}
