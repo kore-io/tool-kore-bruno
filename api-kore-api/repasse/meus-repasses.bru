@@ -1,0 +1,24 @@
+meta {
+  name: Meus repasses
+  type: http
+  seq: 1
+  tags: [
+    local
+  ]
+}
+
+get {
+  url: {{baseUrl}}/v1/me/referrer/payouts
+  body: none
+  auth: none
+}
+
+assert {
+  res.status: eq 200
+  res.body.payoutsEnabled: isBoolean
+  res.body.items: isArray
+}
+
+docs {
+  `GET /v1/me/referrer/payouts` (RN04 e RN07): os pedidos, o próximo pedido possível (30 dias) e a data em que a troca da chave passa a valer. Numa conta nova, sem pedidos.
+}

@@ -1,0 +1,24 @@
+meta {
+  name: Casamentos
+  type: http
+  seq: 6
+  tags: [
+    manual
+    local
+  ]
+}
+
+get {
+  url: {{baseUrl}}/v1/admin/weddings?page=1
+  body: none
+  auth: none
+}
+
+assert {
+  res.status: eq 200
+  res.body.items: isArray
+}
+
+docs {
+  `GET /v1/admin/weddings` (RN05): a lista com os filtros de status, RSVP e datas.
+}

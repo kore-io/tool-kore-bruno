@@ -1,0 +1,24 @@
+meta {
+  name: Log da aplicação
+  type: http
+  seq: 8
+  tags: [
+    manual
+    local
+  ]
+}
+
+get {
+  url: {{baseUrl}}/v1/admin/logs
+  body: none
+  auth: none
+}
+
+assert {
+  res.status: eq 200
+  res.body.items: isArray
+}
+
+docs {
+  `GET /v1/admin/logs` (RN11): os últimos 30 dias; o suporte não recebe as ações de dinheiro nem os centavos (decisões 69 e 275).
+}

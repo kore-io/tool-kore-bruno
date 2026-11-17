@@ -41,6 +41,8 @@ A rodada completa faz 189 pedidos, acima do limite geral de 100 por minuto por I
 limite. Sem o `--delay`, o fim da rodada recebe `429 RATE_LIMITED`. Os convidados criados têm
 e-mail `@exemplo.kore.local` (decisão 181).
 
+**Fase 3** (depois da Assinatura, antes da Conta): Cobrança do casal (a Cobrança do casamento publicado pelo pagamento) → Comissões (as duas abas, o resumo da indicadora e o filtro Aguardando pagamento) → Dados para receber (as chaves Pix) → Repasse (os pedidos) → **Backoffice**, com as tags `manual` e `local`: entra como staff pelo Google dev com o `staffEmail` (`@kore.com.br`, variável secret) e lê a Visão geral, a busca, os casamentos, o log, os alertas, a Cobrança, os repasses, as cerimonialistas e as Configurações. Antes, dê o papel na API: `pnpm staff:role --email <staffEmail> --role admin --by <você> --reason "Bruno local"`.
+
 Tags: `manual` (o botão do e-mail, que vale no lugar do código, e a indicação de um
 indicador de verdade, com `--env-var referralCode=…`) e `local` (o provedor de
 desenvolvimento do Google e o Sair logo antes dele: fora do Local, sem o Google, a sessão
