@@ -14,9 +14,16 @@ get {
   auth: none
 }
 
+script:post-response {
+  // A pasta roda à parte (manual): o casamento lido no detalhe é o primeiro da lista.
+  const [first] = res.body.items ?? [];
+  if (first) bru.setVar("adminWeddingId", first.id);
+}
+
 assert {
   res.status: eq 200
   res.body.items: isArray
+  res.body.items[0].id: isString
 }
 
 docs {
